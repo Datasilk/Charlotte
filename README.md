@@ -67,8 +67,9 @@ You can modify `extractDOM.js` to extract more information about each DOM elemen
 
 > NOTE: The style object (Node.s) is an integer array in order to save a significant amount of bytes when generating the JSON string.
 
+> NOTE: Right now, Charlotte extracts only four integers from an element's style attribute; **display**, **font-size**, **bold**, and **italic**. The reason being is that these values can help determine the importance of a block of text based on if it's being displayed, the size of the font, and whether or not the text is bold and/or italic.
 
 ##### Why the name "Charlotte"?
 Named after the spider in the children's story "Charlotte's Web". Charlotte prevented the slaughter of a piglette named Wilbur by weaving words of praise for Wilbur into her web, which in turn surprised the local farmers and convinced them to keep Wilbur alive.
 
-Similarly, the Charlotte console app weaves a JSON object from the computed DOM of a web page, so that developers can keep the contents of an article instead of letting it go to the slaughter (when the publisher of an article decides to archive the URL).
+Similarly, the Charlotte console app weaves a JSON object from the computed DOM of a web page, so that developers can keep the contents of an article instead of letting it go to the slaughter (when the publisher of an article decides to archive the URL, which would then return a 404 or 500 error).

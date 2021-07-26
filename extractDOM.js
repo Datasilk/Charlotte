@@ -116,10 +116,9 @@
                             nobreaks = true;
                         }
                     }
+                    val = val.replace(/\r\n/g, '\n').replace(/\r/g, '\n').trim();
                     if (nobreaks == false) {
-                        val = val.replace(/\n/g, '').replace(/\r/g, '');
-                    } else {
-                        val = val.replace(/\r\n/g, '\n').replace(/\r/g, '\n').trim();
+                        val = val.replace(/\n/g, ' ').replace(/\r/g, '');
                     }
                     if (val != '') {
                         //replace unknown characters in text
