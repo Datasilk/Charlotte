@@ -96,7 +96,7 @@ namespace Charlotte
         {
             Console.WriteLine(ServiceDescription);
             Console.WriteLine();
-            Console.WriteLine("This application is intened to be run as windows service. Use one of the following options:");
+            Console.WriteLine("This application is intended to be run as windows service. Use one of the following options:");
             Console.WriteLine("  -register         Registers and starts this program as a windows service named \"" + ServiceDisplayName + "\"");
             Console.WriteLine("                    All additional arguments will be passed to the service.");
             Console.WriteLine("  -unregister       Removes the windows service creatd by --register.");

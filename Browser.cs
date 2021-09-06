@@ -21,7 +21,6 @@ namespace Charlotte.Wcf
     [ServiceBehavior(InstanceContextMode = InstanceContextMode.Single)]
     public class Browser : IBrowser
     {
-        private static ChromiumWebBrowser browser;
 
         public Browser(){
             //Initialize Cef
@@ -46,7 +45,7 @@ namespace Charlotte.Wcf
                     WebGl = CefState.Disabled,
                     WindowlessFrameRate = 5
                 };
-                browser = new ChromiumWebBrowser(url, settings);
+                var browser = new ChromiumWebBrowser(url, settings);
 
                 //Frame Load Start Event
                 browser.FrameLoadStart += delegate (object sender, FrameLoadStartEventArgs e)
@@ -62,7 +61,7 @@ namespace Charlotte.Wcf
 
                     Task task = Task.Run(() => {
                         var js = File.ReadAllText(Path + "extractDOM.js");
-                        object result = EvaluateScript(js);
+                        object result = EvaluateScript(browser, js);
                         html = JsonConvert.SerializeObject(result, Formatting.None);
                     });
                 };
@@ -98,6 +97,7 @@ namespace Charlotte.Wcf
                     if (html != "")
                     {
                         Console.WriteLine("downloaded " + url);
+                        browser.Dispose();
                         return html;
                     }
                     Thread.Sleep(1000 / 2);
@@ -106,6 +106,7 @@ namespace Charlotte.Wcf
                 if (html == "")
                 {
                     //return log since response timed out
+                    browser.Dispose();
                     return "log: " + log.ToString();
                 }
             }
@@ -124,7 +125,7 @@ namespace Charlotte.Wcf
             Cef.Shutdown();
         }
 
-        private static object EvaluateScript(string script)
+        private static object EvaluateScript(ChromiumWebBrowser browser, string script)
         {
             var task = browser.EvaluateScriptAsync(script);
             task.Wait();
