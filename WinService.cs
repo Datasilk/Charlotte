@@ -16,7 +16,7 @@ namespace Charlotte
             this.args = args;
         }
 
-        public string ServiceName => "Collect Webs";
+        public string ServiceName => "Charlotte";
 
         public void Start(string[] startupArguments, ServiceStoppedCallback serviceStoppedCallback)
         {

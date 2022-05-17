@@ -1,9 +1,10 @@
 ﻿(function () {
     var knownAttrs = [];
+    var knownTags = [];
 
     function getDOM(node) {
         var dom = walk(node);
-        return { a: knownAttrs, dom: dom };
+        return { t: knownTags, a: knownAttrs, dom: dom };
     }
 
     function walk(node) {
@@ -39,8 +40,13 @@
                 }
 
                 //generate parent node object
+                var tagIndex = knownTags.indexOf(name);
+                if (tagIndex < 0) {
+                    tagIndex = knownTags.length;
+                    known.push(name);
+                }
                 var parent = {
-                    t: name,
+                    t: tagIndex,
                     s: [display,                                    //[0] display
                         parseInt(style.fontSize.replace('px', '')), //[1] font-size
                         parseInt(style.fontWeight) >= 700 ? 2 : 1,  //[2] font-weight
@@ -53,7 +59,7 @@
                     parent.c = [];
 
                     //check for invalid tags
-                    switch (parent.t) {
+                    switch (knownTags[parent.t]) {
                         case "style": case "script": case "svg": case "canvas": case "object":
                         case "embed": case "input": case "select": case "button": case "audio":
                         case "textarea": case "iframe": case "area": case "map": case "noscript":
@@ -76,17 +82,7 @@
                                     //embedded images (base64) should be ignored
                                     return null;
                                 }
-                                var attr;
-                                if (attrs[x].name == 'src') {
-                                    attr = node.src;
-                                }
-                                else if (attrs[x].name == 'href') {
-                                    attr = node.href;
-                                }
-                                else {
-                                    attr = attrs[x].value;
-                                }
-                                parent.a[knownAttrs.indexOf(attrs[x].name)] = clean(attr);
+                                parent.a[knownAttrs.indexOf(attrs[x].name)] = clean(attrs[x].value);
                                 break;
                         }
 
