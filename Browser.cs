@@ -26,7 +26,7 @@ namespace Charlotte.Wcf
             //Initialize Cef
             var cef = new CefSettings();
             cef.CefCommandLineArgs.Add("enable-media-stream", "0");
-            cef.LogSeverity = LogSeverity.Disable;
+            cef.LogSeverity = LogSeverity.Error;
             Cef.Initialize(cef);
         }
         
@@ -41,7 +41,6 @@ namespace Charlotte.Wcf
                 var settings = new BrowserSettings()
                 {
                     ImageLoading = CefState.Disabled,
-                    Plugins = CefState.Disabled,
                     WebGl = CefState.Disabled,
                     WindowlessFrameRate = 5
                 };
@@ -58,11 +57,20 @@ namespace Charlotte.Wcf
                 {
                     log.AppendLine("End loading (" + e.HttpStatusCode + "): " + e.Url);
                     if (html != "") { return; }
+                    if(e.Frame.Identifier != browser.GetMainFrame().Identifier) { return; }
 
                     Task task = Task.Run(() => {
                         var js = File.ReadAllText(Path + "extractDOM.js");
                         object result = EvaluateScript(browser, js);
-                        html = JsonConvert.SerializeObject(result, Formatting.None);
+                        try
+                        {
+                            html = JsonConvert.SerializeObject(result, Formatting.None);
+                        }
+                        catch(Exception ex)
+                        {
+                            html = ex.Message + "\n" + ex.StackTrace;
+                        }
+                        
                     });
                 };
 

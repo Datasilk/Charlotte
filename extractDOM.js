@@ -1,10 +1,12 @@
 ﻿(function () {
     var knownAttrs = [];
-    var knownTags = [];
+    var knownTags = ['a', 'p', 'div', 'span', '#text'];//prepopulate with most used tag names first
+    var knownErrors = [];
+
 
     function getDOM(node) {
         var dom = walk(node);
-        return { t: knownTags, a: knownAttrs, dom: dom };
+        return { t: knownTags, a: knownAttrs, dom: dom, err: knownErrors };
     }
 
     function walk(node) {
@@ -18,7 +20,7 @@
                     style = window.getComputedStyle(node);
                     name = node.tagName.toLowerCase();
                 } else {
-                    style = window.getComputedStyle(node.parentNode);
+                    style = node.parentNode ? window.getComputedStyle(node.parentNode) : null;
                     name = "#text";
                 }
                 
@@ -26,13 +28,14 @@
                 var display = 1;
                 switch (style.display) {
                     case 'none':
-                        switch (name) {
-                            //hidden elements that are required as part of the DOM
-                            case "head": case "title": case "meta": case "#text":
-                                display = 0;
-                                break;
-                            default: return null;
-                        }
+                        //switch (name) {
+                        //    //hidden elements that are required as part of the DOM
+                        //    case "head": case "title": case "meta": case "#text":
+                        //        display = 0;
+                        //        break;
+                        //    default: return null;
+                        //}
+                        display = 0; break;
                     case 'inline':
                         display = 2; break;
                     case 'inline-block':
@@ -43,7 +46,7 @@
                 var tagIndex = knownTags.indexOf(name);
                 if (tagIndex < 0) {
                     tagIndex = knownTags.length;
-                    known.push(name);
+                    knownTags.push(name);
                 }
                 var parent = {
                     t: tagIndex,
@@ -60,20 +63,34 @@
 
                     //check for invalid tags
                     switch (knownTags[parent.t]) {
-                        case "style": case "script": case "svg": case "canvas": case "object":
+                        case "style": case "script": case "link": case "svg": case "canvas": case "object":
                         case "embed": case "input": case "select": case "button": case "audio":
                         case "textarea": case "iframe": case "area": case "map": case "noscript":
                             return null;
                     }
 
+                    //check for large meta tags
+                    var attrs = [...node.attributes];
+                    if (knownTags[parent.t] == "meta" && attrs.length > 0) {
+                        var metacontent = attrs.filter(a => a.name == 'content');
+                        if (metacontent.length > 0 && metacontent[0].value.length > 64) {
+                            return null;
+                        }
+                    }
+
                     //get attributes for node
-                    var attrs = node.attributes;
                     for (var x = 0; x < attrs.length; x++) {
                         switch (attrs[x].name) {
-                            case "style": case "id": case "tabindex": case "index": break;
+                            case "style": case "id": case "tabindex": case "index": case "role": case "onclick":
+                            case "onchange": case "oninput": case "onsubmit": case "rel": case "loading":
+                            case "width": case "height": case "media": case "itemscope":
+                                //ignore unwanted attributes
+                                break;
                             default:
+                                if (attrs[x].anem == "itemprop" && attrs[x].value == 'image') { break }
                                 if (attrs[x].name.indexOf('data-') == 0) { break; }
                                 if (attrs[x].name.indexOf('aria-') == 0) { break; }
+                                if (attrs[x].name.indexOf('xmlns') == 0) { break; }
                                 if (knownAttrs.indexOf(attrs[x].name) < 0) {
                                     //add name to known attributes list
                                     knownAttrs.push(attrs[x].name);
@@ -82,7 +99,21 @@
                                     //embedded images (base64) should be ignored
                                     return null;
                                 }
-                                parent.a[knownAttrs.indexOf(attrs[x].name)] = clean(attrs[x].value);
+
+                                var attr;
+                                if (attrs[x].name == 'src') {
+                                    attr = node.src; //get absolute src
+                                }
+                                else if (attrs[x].name == 'srcset') {
+                                    attr = node.srcset; //get absolute srcset
+                                }
+                                else if (attrs[x].name == 'href') {
+                                    attr = node.href; //get absolute href
+                                }
+                                else {
+                                    attr = attrs[x].value;
+                                }
+                                parent.a[knownAttrs.indexOf(attrs[x].name)] = clean(attr);
                                 break;
                         }
 
@@ -105,11 +136,13 @@
                     var nobreaks = false;
 
                     //check for pre tag to negate removing line-breaks from #text node
-                    if (node.parentNode.tagName.toLowerCase() == 'pre') {
-                        nobreaks = true;
-                    } else if (node.parentNode.tagName.toLowerCase() == 'code') {
-                        if (node.parentNode.parentNode.tagName.toLowerCase() == 'pre') {
+                    if (node.parentNode) {
+                        if (node.parentNode.tagName.toLowerCase() == 'pre') {
                             nobreaks = true;
+                        } else if (node.parentNode.tagName.toLowerCase() == 'code') {
+                            if (node.parentNode.parentNode.tagName.toLowerCase() == 'pre') {
+                                nobreaks = true;
+                            }
                         }
                     }
                     val = val.replace(/\r\n/g, '\n').replace(/\r/g, '\n').trim();
@@ -138,5 +171,4 @@
 
     window["__getDOM"] = getDOM;
 })();
-
 __getDOM(document.body.parentNode);
