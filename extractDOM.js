@@ -168,7 +168,8 @@
             .replace(/”/g, '"') //replace close quotes
             .replace(/"/g, '"') //escape quotes (for C#)
             .replace(/—/g, '&mdash;') //Em dash
-            .replace(/[\u{0080}-\u{FFFF}]/gu, ''); //remove unknown characters
+            //.replace(/[\u{0080}-\u{FFFF}]/gu, '') //remove unknown characters
+            ;
     }
 
     window["__getDOM"] = getDOM;
