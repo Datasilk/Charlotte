@@ -85,8 +85,9 @@
             for (var x = 0; x < attrs.length; x++) {
                 switch (attrs[x].name) {
                     case "style": case "id": case "tabindex": case "index": case "role": case "onclick":
-                    case "onchange": case "oninput": case "onsubmit": case "rel": case "loading":
-                    case "width": case "height": case "media": case "itemscope":
+                    case "onchange": case "oninput": case "onsubmit": case "rel": case "loading": case "for":
+                    case "width": case "height": case "media": case "itemscope": case "alt": case "enctype":
+                    case "method":
                         //ignore unwanted attributes
                         break;
                     default:
@@ -94,32 +95,34 @@
                         if (attrs[x].name.indexOf('data-') == 0) { break; }
                         if (attrs[x].name.indexOf('aria-') == 0) { break; }
                         if (attrs[x].name.indexOf('xmlns') == 0) { break; }
+                        if (attrs[x].value.indexOf('data:image') >= 0) {
+                            //embedded images (base64) should be ignored
+                            break;
+                        }
+
                         if (knownAttrs.indexOf(attrs[x].name) < 0) {
                             //add name to known attributes list
                             knownAttrs.push(attrs[x].name);
                         }
-                        if (attrs[x].value.indexOf('data:image') >= 0) {
-                            //embedded images (base64) should be ignored
-                            continue;
-                        }
 
                         var attr;
-                        if (attrs[x].name == 'src') {
-                            attr = node.src; //get absolute src
-                        }
-                        else if (attrs[x].name == 'srcset') {
-                            attr = node.srcset; //get absolute srcset
-                        }
-                        else if (attrs[x].name == 'href') {
-                            attr = node.href; //get absolute href
-                        }
-                        else {
-                            attr = attrs[x].value;
+                        switch (attrs[x].name) {
+                            case 'src':
+                                attr = node.src; //get absolute src
+                                break;
+                            case 'srcset':
+                                attr = node.srcset; //get absolute srcset
+                                break;
+                            case 'href':
+                                attr = node.href; //get absolute href
+                                break;
+                            default:
+                                attr = attrs[x].value;
+                                break;
                         }
                         parent.a[knownAttrs.indexOf(attrs[x].name)] = clean(attr);
                         break;
                 }
-
             }
 
             //generate all child nodes
