@@ -1,6 +1,8 @@
 ﻿using System;
+using System.IO;
 using System.Linq;
 using System.Diagnostics;
+using System.Text.Json;
 using System.Text.RegularExpressions;
 using DasMulli.Win32.ServiceUtils;
 
@@ -18,6 +20,14 @@ namespace Charlotte
 
         static void Main(string[] args)
         {
+            var root = AppDomain.CurrentDomain.BaseDirectory;
+
+            //load blacklist.json
+            if (File.Exists(root + "blacklist.json"))
+            {
+                Settings.BlacklistedDomains = JsonSerializer.Deserialize<string[]>(File.ReadAllText(root + "blacklist.json"));
+            }
+
             //parse arguments
             if (args.Contains(RunAsServiceFlag))
             {

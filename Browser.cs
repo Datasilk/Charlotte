@@ -21,11 +21,14 @@ namespace Charlotte.Wcf
     [ServiceBehavior(InstanceContextMode = InstanceContextMode.Single)]
     public class Browser : IBrowser
     {
-
         public Browser(){
             //Initialize Cef
             var cef = new CefSettings();
             cef.CefCommandLineArgs.Add("enable-media-stream", "0");
+            cef.CefCommandLineArgs.Add("disable-gpu", null);
+            cef.CefCommandLineArgs.Add("disable-gpu-vsync", null);
+            cef.CefCommandLineArgs.Add("disable-software-rasterizer", null);
+            cef.CefCommandLineArgs.Add("disable-accelerated-2d-canvas", null);
             cef.LogSeverity = LogSeverity.Error;
             Cef.Initialize(cef);
         }
@@ -35,6 +38,7 @@ namespace Charlotte.Wcf
             var html = "";
             var log = new StringBuilder();
             var errors = new StringBuilder();
+            ChromiumWebBrowser browser = null;
             try
             {
                 //Create Browser Instance
@@ -44,7 +48,8 @@ namespace Charlotte.Wcf
                     WebGl = CefState.Disabled,
                     WindowlessFrameRate = 5
                 };
-                var browser = new ChromiumWebBrowser(url, settings);
+                browser = new ChromiumWebBrowser(url, settings);
+                browser.RequestHandler = new RequestHandler();
 
                 //Frame Load Start Event
                 browser.FrameLoadStart += delegate (object sender, FrameLoadStartEventArgs e)
@@ -70,7 +75,6 @@ namespace Charlotte.Wcf
                         {
                             html = ex.Message + "\n" + ex.StackTrace;
                         }
-                        
                     });
                 };
 
@@ -98,9 +102,9 @@ namespace Charlotte.Wcf
                     log.AppendLine("Status Message: " + e.Value);
                 };
 
-                //check for html response (with 15 second timeout)
+                //check for html response (with 10 second timeout)
                 var i = 0;
-                while (i++ <= 15 * 2)
+                while (i++ <= (10 * 2))
                 {
                     if (html != "")
                     {
@@ -115,12 +119,18 @@ namespace Charlotte.Wcf
                 {
                     //return log since response timed out
                     browser.Dispose();
+                    Console.WriteLine("Timeout >> " + log.ToString());
                     return "log: " + log.ToString();
                 }
             }
             catch (Exception ex)
             {
                 //return error information
+                try
+                {
+                    browser.Dispose();
+                }
+                catch (Exception) { }
                 return "error: " + ex.Message + "\n\n" + ex.StackTrace;
             }
 
