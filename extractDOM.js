@@ -76,7 +76,7 @@
             var attrs = [...node.attributes];
             if (knownTags[parent.t] == "meta" && attrs.length > 0) {
                 var metacontent = attrs.filter(a => a.name == 'content');
-                if (metacontent.length > 0 && metacontent[0].value.length > 64) {
+                if (metacontent.length > 0 && metacontent[0].value.length > 250) {
                     return null;
                 }
             }
