@@ -38,6 +38,8 @@ namespace Charlotte.Wcf
             var html = "";
             var log = new StringBuilder();
             var errors = new StringBuilder();
+            var waitforredirect = false;
+            var redirecting = false;
             ChromiumWebBrowser browser = null;
             try
             {
@@ -55,27 +57,39 @@ namespace Charlotte.Wcf
                 browser.FrameLoadStart += delegate (object sender, FrameLoadStartEventArgs e)
                 {
                     log.AppendLine("Started loading: " + e.Url);
+                    //Console.WriteLine("Started loading: " + e.Url);
+                    
                 };
 
                 //Frame Load End Event
                 browser.FrameLoadEnd += delegate (object sender, FrameLoadEndEventArgs e)
                 {
                     log.AppendLine("End loading (" + e.HttpStatusCode + "): " + e.Url);
+                    //Console.WriteLine("End loading (" + e.HttpStatusCode + "): " + e.Url);
                     if (html != "") { return; }
                     if(e.Frame.Identifier != browser.GetMainFrame().Identifier) { return; }
-
-                    Task task = Task.Run(() => {
-                        var js = File.ReadAllText(Path + "extractDOM.js");
-                        object result = EvaluateScript(browser, js);
-                        try
-                        {
-                            html = JsonConvert.SerializeObject(result, Formatting.None);
-                        }
-                        catch(Exception ex)
-                        {
-                            html = ex.Message + "\n" + ex.StackTrace;
-                        }
-                    });
+                    url = e.Url;
+                    if (waitforredirect == true)
+                    {
+                        waitforredirect = false;
+                        redirecting = false;
+                    }
+                    else
+                    {
+                        //Console.WriteLine("Run extractDOM.js on URL: " + e.Url);
+                        Task task = Task.Run(() => {
+                            var js = File.ReadAllText(Path + "extractDOM.js");
+                            object result = EvaluateScript(browser, js);
+                            try
+                            {
+                                html = JsonConvert.SerializeObject(result, Formatting.None);
+                            }
+                            catch(Exception ex)
+                            {
+                                html = ex.Message + "\n" + ex.StackTrace;
+                            }
+                        });
+                    }
                 };
 
                 //Frame Load Error Event
@@ -87,7 +101,10 @@ namespace Charlotte.Wcf
                 //Address Change Event
                 browser.AddressChanged += delegate (object sender, AddressChangedEventArgs e)
                 {
+                    waitforredirect = true;
+                    if (e.Address != url) { redirecting = true; waitforredirect = false; }
                     log.AppendLine("Address Changed: " + e.Address);
+                    //Console.WriteLine("Address Changed: " + e.Address);
                 };
 
                 //Frame Loading State Change Event
@@ -108,7 +125,7 @@ namespace Charlotte.Wcf
                 {
                     if (html != "")
                     {
-                        Console.WriteLine("downloaded " + url);
+                        Console.WriteLine("downloaded " + browser.Address);
                         browser.Dispose();
                         return html;
                     }

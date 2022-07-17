@@ -6,7 +6,7 @@
 
     function getDOM(node) {
         var dom = walk(node);
-        return { t: knownTags, a: knownAttrs, dom: dom, err: knownErrors };
+        return { t: knownTags, a: knownAttrs, dom: dom, err: knownErrors, url: window.location.href };
     }
 
     function walk(node) {
