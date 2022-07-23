@@ -25,10 +25,18 @@ namespace Charlotte.Wcf
             //Initialize Cef
             var cef = new CefSettings();
             cef.CefCommandLineArgs.Add("enable-media-stream", "0");
+            cef.CefCommandLineArgs.Add("disable-image-loading", null);
+            cef.CefCommandLineArgs.Add("disable-javascript-access-clipboard", null);
             cef.CefCommandLineArgs.Add("disable-gpu", null);
             cef.CefCommandLineArgs.Add("disable-gpu-vsync", null);
             cef.CefCommandLineArgs.Add("disable-software-rasterizer", null);
             cef.CefCommandLineArgs.Add("disable-accelerated-2d-canvas", null);
+
+            //cef.CefCommandLineArgs.Add("persist-session-cookies", null);
+            //cef.CefCommandLineArgs.Add("disable-spell-checking", null);
+            //cef.CefCommandLineArgs.Add("disable-pdf-extension", null);
+            //cef.CefCommandLineArgs.Add("", null);
+            //cef.CefCommandLineArgs.Add("", null);
             cef.LogSeverity = LogSeverity.Error;
             Cef.Initialize(cef);
         }
@@ -38,7 +46,6 @@ namespace Charlotte.Wcf
             var html = "";
             var log = new StringBuilder();
             var errors = new StringBuilder();
-            var waitforredirect = false;
             var redirecting = false;
             ChromiumWebBrowser browser = null;
             try
@@ -56,9 +63,12 @@ namespace Charlotte.Wcf
                 //Frame Load Start Event
                 browser.FrameLoadStart += delegate (object sender, FrameLoadStartEventArgs e)
                 {
-                    log.AppendLine("Started loading: " + e.Url);
-                    //Console.WriteLine("Started loading: " + e.Url);
-                    
+                    log.AppendLine("Started loading: " + e.Url + (e.Frame.IsMain ? " (main frame)" : " (iframe)"));
+                    //Console.WriteLine("Started loading: " + e.Url + (e.Frame.IsMain ? " (main frame)" : " (iframe)"));
+                    if(e.Frame.IsMain == false) { // && e.Url != "about:blank") {
+                        //Console.WriteLine("delete iframe");
+                        e.Frame.Delete();
+                    }
                 };
 
                 //Frame Load End Event
@@ -68,15 +78,10 @@ namespace Charlotte.Wcf
                     //Console.WriteLine("End loading (" + e.HttpStatusCode + "): " + e.Url);
                     if (html != "") { return; }
                     if(e.Frame.Identifier != browser.GetMainFrame().Identifier) { return; }
-                    url = e.Url;
-                    if (waitforredirect == true)
+                    if (redirecting == false || (redirecting == true && e.Frame.Url == url))
                     {
-                        waitforredirect = false;
                         redirecting = false;
-                    }
-                    else
-                    {
-                        //Console.WriteLine("Run extractDOM.js on URL: " + e.Url);
+                        Console.WriteLine("Run extractDOM.js on URL: " + e.Url);
                         Task task = Task.Run(() => {
                             var js = File.ReadAllText(Path + "extractDOM.js");
                             object result = EvaluateScript(browser, js);
@@ -101,10 +106,14 @@ namespace Charlotte.Wcf
                 //Address Change Event
                 browser.AddressChanged += delegate (object sender, AddressChangedEventArgs e)
                 {
-                    waitforredirect = true;
-                    if (e.Address != url) { redirecting = true; waitforredirect = false; }
                     log.AppendLine("Address Changed: " + e.Address);
                     //Console.WriteLine("Address Changed: " + e.Address);
+                    if (e.Address != url)
+                    {
+                        redirecting = true;
+                        url = e.Address;
+                        //Console.WriteLine("redirecting = true");
+                    }
                 };
 
                 //Frame Loading State Change Event
@@ -125,7 +134,7 @@ namespace Charlotte.Wcf
                 {
                     if (html != "")
                     {
-                        Console.WriteLine("downloaded " + browser.Address);
+                        //Console.WriteLine("downloaded " + browser.Address);
                         browser.Dispose();
                         return html;
                     }
@@ -136,6 +145,7 @@ namespace Charlotte.Wcf
                 {
                     //return log since response timed out
                     browser.Dispose();
+                    Console.WriteLine("/////////////////////////////////////////////////////////////");
                     Console.WriteLine("Timeout >> " + log.ToString());
                     return "log: " + log.ToString();
                 }
