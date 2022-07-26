@@ -25,7 +25,7 @@ namespace Charlotte.Wcf
             //Initialize Cef
             var cef = new CefSettings();
             cef.CefCommandLineArgs.Add("enable-media-stream", "0");
-            cef.CefCommandLineArgs.Add("disable-image-loading", null);
+            //cef.CefCommandLineArgs.Add("disable-image-loading", null);
             cef.CefCommandLineArgs.Add("disable-javascript-access-clipboard", null);
             cef.CefCommandLineArgs.Add("disable-gpu", null);
             cef.CefCommandLineArgs.Add("disable-gpu-vsync", null);
@@ -82,6 +82,7 @@ namespace Charlotte.Wcf
                     {
                         redirecting = false;
                         Console.WriteLine("Run extractDOM.js on URL: " + e.Url);
+                        //Thread.Sleep(5000);
                         Task task = Task.Run(() => {
                             var js = File.ReadAllText(Path + "extractDOM.js");
                             object result = EvaluateScript(browser, js);

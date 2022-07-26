@@ -1,12 +1,14 @@
 ﻿(function () {
     var knownAttrs = [];
     var knownTags = ['a', 'p', 'div', 'span', '#text'];//prepopulate with most used tag names first
+    var knownClassNames = [];
     var knownErrors = [];
+    var protocol = window.location.href.split('://')[0];
 
 
     function getDOM(node) {
         var dom = walk(node);
-        return { t: knownTags, a: knownAttrs, dom: dom, err: knownErrors, url: window.location.href };
+        return { t: knownTags, a: knownAttrs, cn: knownClassNames, dom: dom, err: knownErrors, url: window.location.href };
     }
 
     function walk(node) {
@@ -61,8 +63,7 @@
         };
 
         if (node.nodeType == 1) {
-            parent.a = {};
-            parent.c = [];
+            
 
             //check for invalid tags
             switch (knownTags[parent.t]) {
@@ -90,9 +91,24 @@
                     case "method":
                         //ignore unwanted attributes
                         break;
+                    case "class":
+                        //break up class names
+                        var classes = attrs[x].value.split(' ');
+                        if (typeof parent.n == 'undefined') { parent.n = []; }
+                        for (var y = 0; y < classes.length; y++) {
+                            //save all classes to dictionary and add their indexes to element class names indexes array
+                            var i = knownClassNames.indexOf(classes[y]);
+                            if (i < 0) {
+                                knownClassNames.push(classes[y]);
+                                i = knownClassNames.length - 1;
+                            }
+                            parent.n.push(i);
+                        }
+                        break;
                     default:
-                        if (attrs[x].anem == "itemprop" && attrs[x].value == 'image') { break }
-                        if (attrs[x].name.indexOf('data-') == 0) { break; }
+                        if (attrs[x].name == "itemprop" && attrs[x].value == 'image') { break }
+                        if (attrs[x].name.indexOf('data-src') == 0) {
+                        } else if (attrs[x].name.indexOf('data-') == 0) { break; }
                         if (attrs[x].name.indexOf('aria-') == 0) { break; }
                         if (attrs[x].name.indexOf('xmlns') == 0) { break; }
                         if (attrs[x].value.indexOf('data:image') >= 0) {
@@ -100,33 +116,44 @@
                             break;
                         }
 
-                        if (knownAttrs.indexOf(attrs[x].name) < 0) {
-                            //add name to known attributes list
-                            knownAttrs.push(attrs[x].name);
-                        }
-
-                        var attr;
-                        switch (attrs[x].name) {
+                        var val;
+                        var name = attrs[x].name
+                        switch (name) {
                             case 'src':
-                                attr = node.src; //get absolute src
+                                val = node.src; //get absolute src
                                 break;
                             case 'srcset':
-                                attr = node.srcset; //get absolute srcset
+                                val = node.srcset; //get absolute srcset
                                 break;
                             case 'href':
-                                attr = node.href; //get absolute href
+                                val = node.href; //get absolute href
+                                break;
+                            case "data-src":
+                                val = attrs[x].value;
+                                name = 'src';
                                 break;
                             default:
-                                attr = attrs[x].value;
+                                val = attrs[x].value;
                                 break;
                         }
-                        parent.a[knownAttrs.indexOf(attrs[x].name)] = clean(attr);
+                        if (val.indexOf('//') == 0) {
+                            val = protocol + ':' + val;
+                        }
+                        if (knownAttrs.indexOf(name) < 0) {
+                            //add name to known attributes list
+                            knownAttrs.push(name);
+                        }
+                        if (typeof parent.a == 'undefined') { parent.a = {}; }
+                        parent.a[knownAttrs.indexOf(name)] = clean(val);
                         break;
                 }
             }
 
             //generate all child nodes
             var children = node.childNodes;
+            if (children.length > 0) {
+                parent.c = [];
+            }
             for (var i = 0; i < children.length; i++) {
                 var child = walk(children[i]);
                 if (child != null) {
