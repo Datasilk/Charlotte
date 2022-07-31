@@ -139,6 +139,9 @@
     <Compile Include="Host.cs" />
   </ItemGroup>
   <ItemGroup>
+    <Content Include="pageSetup.js">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
     <None Include="App.config" />
     <Content Include="blacklist.json">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>

@@ -32,11 +32,9 @@ namespace Charlotte.Wcf
             cef.CefCommandLineArgs.Add("disable-software-rasterizer", null);
             cef.CefCommandLineArgs.Add("disable-accelerated-2d-canvas", null);
 
-            //cef.CefCommandLineArgs.Add("persist-session-cookies", null);
+            cef.CefCommandLineArgs.Add("persist-session-cookies", "0");
             //cef.CefCommandLineArgs.Add("disable-spell-checking", null);
             //cef.CefCommandLineArgs.Add("disable-pdf-extension", null);
-            //cef.CefCommandLineArgs.Add("", null);
-            //cef.CefCommandLineArgs.Add("", null);
             cef.LogSeverity = LogSeverity.Error;
             Cef.Initialize(cef);
         }
@@ -81,8 +79,10 @@ namespace Charlotte.Wcf
                     if (redirecting == false || (redirecting == true && e.Frame.Url == url))
                     {
                         redirecting = false;
-                        Console.WriteLine("Run extractDOM.js on URL: " + e.Url);
-                        //Thread.Sleep(5000);
+                        //Console.WriteLine("Run extractDOM.js on URL: " + e.Url);
+                        browser.EvaluateScriptAsync(File.ReadAllText(Path + "pageSetup.js"));
+                        Thread.Sleep(2000);
+
                         Task task = Task.Run(() => {
                             var js = File.ReadAllText(Path + "extractDOM.js");
                             object result = EvaluateScript(browser, js);

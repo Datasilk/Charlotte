@@ -8,6 +8,9 @@
 
     function getDOM(node) {
         var dom = walk(node);
+        if (window.scrolltoinfo != null) {
+            knownErrors.push('scroll to: ' + window.scrolltoinfo.join(', '));
+        }
         return { t: knownTags, a: knownAttrs, cn: knownClassNames, dom: dom, err: knownErrors, url: window.location.href };
     }
 
