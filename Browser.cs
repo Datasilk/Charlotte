@@ -79,18 +79,34 @@ namespace Charlotte.Wcf
                     if (redirecting == false || (redirecting == true && e.Frame.Url == url))
                     {
                         redirecting = false;
-                        //Console.WriteLine("Run extractDOM.js on URL: " + e.Url);
-                        browser.EvaluateScriptAsync(File.ReadAllText(Path + "pageSetup.js"));
-                        Thread.Sleep(2000);
 
-                        Task task = Task.Run(() => {
-                            var js = File.ReadAllText(Path + "extractDOM.js");
-                            object result = EvaluateScript(browser, js);
+                        Task lazytask = Task.Run(() => {
+                            var lazyjs = File.ReadAllText(Path + "check-lazyload.js");
+                            object result = EvaluateScript(browser, lazyjs);
                             try
                             {
-                                html = JsonConvert.SerializeObject(result, Formatting.None);
+                                if ((bool)result == true)
+                                {
+                                    browser.EvaluateScriptAsync(File.ReadAllText(Path + "lazyload.js"));
+                                    Thread.Sleep(2000);
+                                }
+
+                                //finally, extract the DOM in JSON format
+                                //Console.WriteLine("Run extractDOM.js on URL: " + e.Url);
+                                Task task = Task.Run(() => {
+                                    var js = File.ReadAllText(Path + "extractDOM.js");
+                                    result = EvaluateScript(browser, js);
+                                    try
+                                    {
+                                        html = JsonConvert.SerializeObject(result, Formatting.None);
+                                    }
+                                    catch (Exception ex)
+                                    {
+                                        html = ex.Message + "\n" + ex.StackTrace;
+                                    }
+                                });
                             }
-                            catch(Exception ex)
+                            catch (Exception ex)
                             {
                                 html = ex.Message + "\n" + ex.StackTrace;
                             }
@@ -165,6 +181,11 @@ namespace Charlotte.Wcf
             return "";
         }
 
+        public string Login(string url, string user, string pass, string macros)
+        {
+            return "";
+        }
+
         public void Dispose()
         {
             //Dispose Browser
@@ -173,10 +194,17 @@ namespace Charlotte.Wcf
 
         private static object EvaluateScript(ChromiumWebBrowser browser, string script)
         {
-            var task = browser.EvaluateScriptAsync(script);
-            task.Wait();
-            var response = task.Result;
-            return response.Success ? (response.Result ?? "") : response.Message;
+            try
+            {
+                var task = browser.EvaluateScriptAsync(script, null, true);
+                //task.Wait();
+                var response = task.Result;
+                return response.Success ? (response.Result ?? "") : response.Message;
+            }
+            catch(Exception ex)
+            {
+                return null;
+            }
         }
 
         private static string Path

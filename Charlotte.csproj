@@ -139,7 +139,10 @@
     <Compile Include="Host.cs" />
   </ItemGroup>
   <ItemGroup>
-    <Content Include="pageSetup.js">
+    <Content Include="check-lazyload.js">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="lazyload.js">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
     <None Include="App.config" />

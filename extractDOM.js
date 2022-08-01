@@ -1,4 +1,4 @@
-﻿(function () {
+﻿
     var knownAttrs = [];
     var knownTags = ['a', 'p', 'div', 'span', '#text'];//prepopulate with most used tag names first
     var knownClassNames = [];
@@ -205,6 +205,4 @@
             ;
     }
 
-    window["__getDOM"] = getDOM;
-})();
-__getDOM(document.body.parentNode);
+    return getDOM(document.body.parentNode);
