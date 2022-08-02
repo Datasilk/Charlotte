@@ -10,8 +10,6 @@
     public static class App
     {
         public static Models.Config Config { get; set; } = new Models.Config();
-        public static string Username { get; set; } = "";
-        public static string Password { get; set; } = "";
 
         public static Environment Environment { get; set; } = Environment.development;
         public static bool IsDocker { get; set; }

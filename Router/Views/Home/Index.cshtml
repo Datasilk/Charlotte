@@ -1,5 +1,5 @@
 ﻿@{
-    ViewData["Title"] = "Charlotte's Web - Log In";
+    ViewData["Title"] = "Log In";
 }
 
 <style type="text/css">
@@ -12,7 +12,17 @@
 </div>
 
 <div class="login">
-    <div class="row">
-
-    </div>
+    <form method="post">
+        <div class="row hover">
+            <div class="col field long">Username</div>
+            <div class="col input"><input type="text" name="username" /></div>
+        </div>
+        <div class="row hover">
+            <div class="col field long">Password</div>
+            <div class="col input"><input type="password" name="password" /></div>
+        </div>
+        <div class="row pad-top-sm right">
+            <button type="submit">Login</button>
+        </div>
+    </form>
 </div>

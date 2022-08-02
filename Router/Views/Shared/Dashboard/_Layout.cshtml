@@ -1,0 +1,30 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>@ViewData["Title"] - Charlotte's Web Router</title>
+    <link rel="stylesheet" href="/css/site.css"/>
+</head>
+<body class="box">
+    <header>
+        <div class="col title">Charlotte's Web Router</div>
+        @if (Model == null || Model.GetType().GetProperty("AddingInstance") == null)
+        {
+            <div class="col right">
+                <a href="/AddInstance">Add New Instance</a>
+            </div>
+        }
+        @if (Model == null || Model.GetType().GetProperty("ViewingInstances") == null)
+        {
+            <div class="col right">
+                <a href="/Dashboard">View Instances</a>
+            </div>
+        }
+    </header>
+    <div class="contents">
+        @RenderBody()
+    </div>
+    @await RenderSectionAsync("Scripts", required: false)
+</body>
+</html>
