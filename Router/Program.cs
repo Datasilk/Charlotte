@@ -42,12 +42,12 @@ switch (app.Environment.EnvironmentName.ToLower())
 }
 
 //load application-wide cache
-var configFile = "config" +
+Router.App.ConfigFilename = "config" +
     (Router.App.IsDocker ? ".docker" : "") +
     (Router.App.Environment == Router.Environment.production ? ".prod" : "") + ".json";
 
 var builtConfig = new ConfigurationBuilder()
-                .AddJsonFile(Router.App.MapPath(configFile))
+                .AddJsonFile(Router.App.MapPath(Router.App.ConfigFilename))
                 .AddEnvironmentVariables().Build();
 builtConfig.Bind(Router.App.Config);
 

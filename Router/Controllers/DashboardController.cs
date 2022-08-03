@@ -9,7 +9,8 @@ namespace Router.Controllers
         public IActionResult Index()
         {
             if (!CheckSecurity()) { return RedirectToAction("AccessDenied"); }
-            return View(new { ViewingInstances = true });
+
+            return View(new DashboardViewModel() { Config = App.Config });
         }
 
         [ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]

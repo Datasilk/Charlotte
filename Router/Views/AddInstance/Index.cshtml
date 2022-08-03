@@ -11,7 +11,7 @@
     <div class="row pad-bottom">
         <h4>Add New Charlotte Instance</h4>
     </div>
-    <form method="post">
+    <form method="post" action="/AddInstance/Create">
         <div class="row hover">
             <div class="col field long">ID</div>
             <div class="col input expand short"><input type="text" name="instanceId" placeholder="Charlotte-008" title="A unique ID or name for this instance of Charlotte" /></div>
@@ -25,15 +25,15 @@
             <div class="col input expand short"><input type="text" name="serverName" title="The name of the machine that Charlotte is running on" /></div>
         </div>
         <div class="row hover">
+            <div class="col field long">Note (optional)</div>
+            <div class="col input expand short"><input type="text" name="note" title="Any notes that you'd like to add about this instance?" /></div>
+        </div>
+        <div class="row hover">
             <div class="col field long"></div>
             <div class="col input expand short">
                 <input type="checkbox" value="1" name="usesCookies" id="usesCookies" title="Does the instance have cookies & user sessions enabled?" />
                 <label for="usesCookies">Uses Cookies</label>
             </div>
-        </div>
-        <div class="row hover">
-            <div class="col field long">Note (optional)</div>
-            <div class="col input expand short"><input type="text" name="note" title="Any notes that you'd like to add about this instance?" /></div>
         </div>
         <div class="row pad-top-sm">
             <div class="col right">

@@ -1,12 +1,38 @@
-﻿@{
+﻿@model Router.Models.DashboardViewModel
+@{
     ViewData["Title"] = "Dashboard";
     Layout = "Dashboard/_Layout";
 }
 
 <style type="text/css">
-    
+    .dashboard{max-width:2100px; margin:0 auto;}
+    .dashboard .item .title{font-weight:bold;}
 </style>
 
 <div class="dashboard">
+    <div class="list">
+    @if(Model.Config != null && Model.Config.Charlotte != null && Model.Config.Charlotte.Instances != null)
+    {
+        @foreach(var instance in Model.Config.Charlotte.Instances)
+        {
+            <div class="row hover pad item">
+                <div class="col text title">@(instance.ServerName + " - " + instance.Id)</div>
 
+                <div class="col text pad-right">
+                    <a href="@instance.Url" target="_blank">@instance.Url</a>
+                </div>
+                @if(instance.UsesCookies == true)
+                {
+                    <div class="col text pad-right">Uses Cookies</div>
+                }
+                @if(instance.Note != "")
+                {
+                    <div class="col text">
+                        <p>@instance.Note</p>
+                    </div>
+                }
+            </div>
+        }
+    }
+    </div>
 </div>

@@ -3121,6 +3121,9 @@ header a:hover {
 header a:active {
   color: #8100b4;
 }
+.list .item {
+  border-bottom: 1px solid rgba(0, 0, 0, 0.1);
+}
 header {
   padding: 10px 20px;
 }

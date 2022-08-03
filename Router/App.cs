@@ -1,4 +1,8 @@
-﻿namespace Router
+﻿using System.Text;
+using System.Text.Json;
+using System.IO;
+
+namespace Router
 {
     public enum Environment
     {
@@ -10,6 +14,7 @@
     public static class App
     {
         public static Models.Config Config { get; set; } = new Models.Config();
+        public static string ConfigFilename { get; set; } = "";
 
         public static Environment Environment { get; set; } = Environment.development;
         public static bool IsDocker { get; set; }
@@ -39,6 +44,11 @@
             {
                 return Path.Combine(RootPath.Replace("/", "\\"), path.Replace("/", "\\"));
             }
+        }
+
+        public static void SaveConfig()
+        {
+            File.WriteAllText(MapPath("/" + ConfigFilename), JsonSerializer.Serialize(Config));
         }
     }
 }
