@@ -6,8 +6,9 @@ using WebBrowser.Wcf;
 
 namespace Router.Controllers
 {
-    public class BrowseController : BaseController
+    public class GetDOMController : BaseController
     {
+        [HttpPost]
         public string Index(string url, bool session = false, string macros = "")
         {
             try
@@ -15,12 +16,18 @@ namespace Router.Controllers
 
                 //find unused instance of Charlotte to collect the DOM from
                 ConfigCharlotteInstance? instance = null;
+                var start = DateTime.Now;
                 while (instance == null)
                 {
                     instance = App.Config.Charlotte.Instances.Where(a => a.InUse == false && a.UsesCookies == session)
                         .OrderBy(a => a.Started).FirstOrDefault();
+                    if((DateTime.Now - start).TotalSeconds > 10)
+                    { 
+                        return "Error: Timeout when waiting for available Charlotte instance"; 
+                    }
                     Thread.Sleep(500);
                 }
+                Console.WriteLine("found instance " + instance.Id + " (" + instance.Url + ")");
                 //instance is in use //////////////////////////
                 instance.InUse = true;
                 instance.Started = DateTime.Now;

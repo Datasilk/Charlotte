@@ -7,6 +7,9 @@
 *.sln.docstates
 /.vs/
 blacklist.json
+config.json
+config.*.json
+!config.template.json
 
 # Build results
 [Dd]ebug/

@@ -1,0 +1,17 @@
+{
+  "Admin": {
+    "Username": "admin",
+    "Pass": "123456"
+  },
+  "Charlotte": {
+    "Instances": [
+      {
+        "Id": "Charlotte-001",
+        "Url": "http://host.docker.internal:7077/Browser",
+        "ServerName": "Bahamut",
+        "UsesCookies": false,
+        "Note": "First instance ever."
+      }
+    ]
+  }
+}
