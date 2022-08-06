@@ -1,0 +1,86 @@
+﻿@model Router.Models.ConfigCharlotteInstance
+@{
+    ViewData["Title"] = "Edit Instance";
+    Layout = "Dashboard/_Layout";
+}
+
+<style type="text/css">
+    .edit-instance{padding:50px 20px; max-width:400px; width:100%; margin:0 auto;}  
+    .btn-delete{position:relative; top:-36px; left:65px;}
+</style>
+
+<div class="edit-instance">
+    <div class="row pad-bottom">
+        <h4>Add New Charlotte Instance</h4>
+    </div>
+    <form id="formEditInstance" method="post" action="/EditInstance/Update">
+        <div class="row hover">
+            <div class="col field long">ID</div>
+            <div class="col text expand short" title="A unique ID or name for this instance of Charlotte">@Model.Id</div>
+            <input type="hidden" name="instanceId" value="@Model.Id" />
+        </div>
+        <div class="row hover">
+            <div class="col field long">Url</div>
+            <div class="col input expand short"><input type="text" name="url" value="@Model.Url" placeholder="https://127.0.0.1:7365" title="The URL endpoint for your Charlotte instance" /></div>
+        </div>
+        <div class="row hover">
+            <div class="col field long">Server Name</div>
+            <div class="col input expand short"><input type="text" name="serverName" value="@Model.ServerName" title="The name of the machine that Charlotte is running on" /></div>
+        </div>
+        <div class="row hover">
+            <div class="col field long">Note (optional)</div>
+            <div class="col input expand short"><input type="text" name="note" value="@Model.Note" title="Any notes that you'd like to add about this instance?" /></div>
+        </div>
+        <div class="row hover">
+            <div class="col field long"></div>
+            <div class="col input expand short">
+                <input type="checkbox" value="1" name="usesCookies" id="usesCookies" 
+                    @(Model.UsesCookies == true ? "checked=\"checked\"" : "")
+                    title="Does the instance have cookies & user sessions enabled?" />
+                <label for="usesCookies">Uses Cookies</label>
+            </div>
+        </div>
+        <div class="row pad-top-sm">
+            <div class="col right">
+                <button type="submit">Update Instance</button>
+            </div>
+            <div class="col right pad-right">
+                <a href="/Dashboard" class="button cancel">Cancel</a>
+            </div>
+        </div>
+    </form>
+    <div class="col pad-right btn-delete">
+        <button onclick="deleteInstance(event)" class="red">Delete</button>
+        <form id="formDeleteInstance" method="post" action="/EditInstance/Delete">
+            <input type="hidden" name="instanceId" value="@Model.Id" />
+        </form> 
+    </div>
+</div>
+
+<script>
+function deleteInstance(event) {
+    if (confirm('Do you really want to delete this instance from the router? This cannot be undone!')) { 
+        formDeleteInstance.submit();
+    }
+}
+formDeleteInstance.addEventListener('submit', (event) => {
+    const xhr = new XMLHttpRequest();
+    xhr.open('POST', '/EditInstance/Delete');
+
+    // prepare form data
+    let data = new FormData(form);
+
+    // set headers
+    xhr.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded');
+    xhr.setRequestHeader('X-Requested-With', 'XMLHttpRequest');
+
+    // send request
+    xhr.send(data);
+
+    // listen for `load` event
+    xhr.onload = () => {
+        alert('Instance deleted successfully');
+        window.location.href = "/Dashboard";
+    };
+});
+</script>

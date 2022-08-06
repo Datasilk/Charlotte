@@ -7,6 +7,11 @@
 <style type="text/css">
     .dashboard{max-width:2100px; margin:0 auto;}
     .dashboard .item .title{font-weight:bold;}
+    .dashboard .list span.row, .dashboard .list span.col{display:inline-block;}
+    span.uses-cookies{background-color:#bfe7cf; padding:9px 10px 10px 10px !important;}
+    .row.hover:hover .uses-cookies{background-color:#bbf9d3;}
+    span.note{background-color:#f9f5a2; padding:9px 10px 10px 10px !important; margin-left:20px}
+    .row.hover:hover .note{background-color:#fffbae;}
 </style>
 
 <div class="dashboard">
@@ -15,23 +20,23 @@
     {
         @foreach(var instance in Model.Config.Charlotte.Instances)
         {
-            <div class="row hover pad item">
-                <div class="col text title">@(instance.ServerName + " - " + instance.Id)</div>
+            <a href="/EditInstance?id=@(System.Net.WebUtility.UrlEncode(instance.Id))">
+                <span class="row hover pad item">
+                    <span class="col text title">@(instance.ServerName + " - " + instance.Id)</span>
 
-                <div class="col text pad-right">
-                    <a href="@instance.Url" target="_blank">@instance.Url</a>
-                </div>
-                @if(instance.UsesCookies == true)
-                {
-                    <div class="col text pad-right">Uses Cookies</div>
-                }
-                @if(instance.Note != "")
-                {
-                    <div class="col text">
-                        <p>@instance.Note</p>
-                    </div>
-                }
-            </div>
+                    <span class="col text pad-right">
+                        @instance.Url
+                    </span>
+                    @if(instance.UsesCookies == true)
+                    {
+                        <span class="col text uses-cookies">Uses Cookies</span>
+                    }
+                    @if(instance.Note != "")
+                    {
+                        <span class="col text note">@instance.Note</span>
+                    }
+                </span>
+            </a>
         }
     }
     </div>
