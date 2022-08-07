@@ -1,0 +1,37 @@
+<Project Sdk="Microsoft.NET.Sdk.Web">
+
+  <PropertyGroup>
+    <TargetFramework>net6.0</TargetFramework>
+    <Nullable>enable</Nullable>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <DockerDefaultTargetOS>Linux</DockerDefaultTargetOS>
+	<CefSharpBuildAction>Content</CefSharpBuildAction>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <None Remove="check-lazyload.js" />
+    <None Remove="extractDOM.js" />
+    <None Remove="lazyload.js" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Content Include="check-lazyload.js">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="extractDOM.js">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="lazyload.js">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+  </ItemGroup>
+
+	<ItemGroup>
+		<PackageReference Include="cef.redist.x64" Version="103.0.12" />
+		<PackageReference Include="CefSharp.Common.NETCore" Version="103.0.120" />
+		<PackageReference Include="CefSharp.OffScreen.NETCore" Version="103.0.120" />
+		<PackageReference Include="Microsoft.VisualStudio.Azure.Containers.Tools.Targets" Version="1.16.1" />
+		<PackageReference Include="System.ServiceModel.Primitives" Version="4.9.0" />
+	</ItemGroup>
+
+</Project>

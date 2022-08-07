@@ -1,15 +1,11 @@
-﻿using System;
-using System.Threading;
-using System.Threading.Tasks;
-using System.IO;
-using System.Text;
+﻿using System.Text;
+using System.Text.Json;
 using System.Reflection;
 using System.ServiceModel;
 using CefSharp;
 using CefSharp.OffScreen;
-using Newtonsoft.Json;
 
-namespace Charlotte.Wcf
+namespace Charlotte
 {
     [ServiceContract]
     public interface IBrowser
@@ -18,7 +14,7 @@ namespace Charlotte.Wcf
         string Collect(string url);
     }
 
-    [ServiceBehavior(InstanceContextMode = InstanceContextMode.Single)]
+    //[ServiceBehavior(InstanceContextMode = InstanceContextMode.Single)]
     public class Browser : IBrowser
     {
         public Browser(){
@@ -59,7 +55,7 @@ namespace Charlotte.Wcf
                 browser.RequestHandler = new RequestHandler();
 
                 //Frame Load Start Event
-                browser.FrameLoadStart += delegate (object sender, FrameLoadStartEventArgs e)
+                browser.FrameLoadStart += delegate (object? sender, FrameLoadStartEventArgs e)
                 {
                     log.AppendLine("Started loading: " + e.Url + (e.Frame.IsMain ? " (main frame)" : " (iframe)"));
                     //Console.WriteLine("Started loading: " + e.Url + (e.Frame.IsMain ? " (main frame)" : " (iframe)"));
@@ -70,7 +66,7 @@ namespace Charlotte.Wcf
                 };
 
                 //Frame Load End Event
-                browser.FrameLoadEnd += delegate (object sender, FrameLoadEndEventArgs e)
+                browser.FrameLoadEnd += delegate (object? sender, FrameLoadEndEventArgs e)
                 {
                     log.AppendLine("End loading (" + e.HttpStatusCode + "): " + e.Url);
                     //Console.WriteLine("End loading (" + e.HttpStatusCode + "): " + e.Url);
@@ -98,7 +94,7 @@ namespace Charlotte.Wcf
                                     result = EvaluateScript(browser, js);
                                     try
                                     {
-                                        html = JsonConvert.SerializeObject(result, Formatting.None);
+                                        html = JsonSerializer.Serialize(result);
                                     }
                                     catch (Exception ex)
                                     {
@@ -115,13 +111,13 @@ namespace Charlotte.Wcf
                 };
 
                 //Frame Load Error Event
-                browser.LoadError += delegate (object sender, LoadErrorEventArgs e)
+                browser.LoadError += delegate (object? sender, LoadErrorEventArgs e)
                 {
                     log.AppendLine(e.ErrorCode.ToString() + " (" + e.FailedUrl + "): /n" + e.ErrorText + "/n");
                 };
 
                 //Address Change Event
-                browser.AddressChanged += delegate (object sender, AddressChangedEventArgs e)
+                browser.AddressChanged += delegate (object? sender, AddressChangedEventArgs e)
                 {
                     log.AppendLine("Address Changed: " + e.Address);
                     //Console.WriteLine("Address Changed: " + e.Address);
@@ -134,13 +130,13 @@ namespace Charlotte.Wcf
                 };
 
                 //Frame Loading State Change Event
-                browser.LoadingStateChanged += delegate (object sender, LoadingStateChangedEventArgs e)
+                browser.LoadingStateChanged += delegate (object? sender, LoadingStateChangedEventArgs e)
                 {
                     log.AppendLine("Loading State changed: " + e.IsLoading);
                 };
 
                 //Frame Load Start Event
-                browser.StatusMessage += delegate (object sender, StatusMessageEventArgs e)
+                browser.StatusMessage += delegate (object? sender, StatusMessageEventArgs e)
                 {
                     log.AppendLine("Status Message: " + e.Value);
                 };
@@ -209,7 +205,10 @@ namespace Charlotte.Wcf
 
         private static string Path
         {
-            get { return Assembly.GetExecutingAssembly().Location.Replace("Charlotte.exe", ""); }
+            get {
+                //return Assembly.GetExecutingAssembly().Location.Replace("Charlotte.exe", ""); 
+                return App.RootPath + "/";
+            }
         }
     }
 }
