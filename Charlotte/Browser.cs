@@ -94,11 +94,14 @@ namespace Charlotte
                                     result = EvaluateScript(browser, js);
                                     try
                                     {
-                                        html = JsonSerializer.Serialize(result);
+                                        html = JsonSerializer.Serialize(result, new JsonSerializerOptions()
+                                        {
+                                            MaxDepth = 256
+                                        });
                                     }
                                     catch (Exception ex)
                                     {
-                                        html = ex.Message + "\n" + ex.StackTrace;
+                                        html = ex.Message + "\n" + ex.StackTrace + "\n\n\n" + result;
                                     }
                                 });
                             }
