@@ -16,6 +16,7 @@
     <None Remove="check-lazyload.js" />
     <None Remove="extractDOM.js" />
     <None Remove="lazyload.js" />
+    <None Remove="README.md" />
   </ItemGroup>
 
   <ItemGroup>
@@ -26,6 +27,9 @@
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
     <Content Include="lazyload.js">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="README.md">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
   </ItemGroup>

@@ -9,6 +9,7 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <Content Remove="config.json" />
     <Content Remove="web.config" />
   </ItemGroup>
 
@@ -26,7 +27,10 @@
   </ItemGroup>
 
   <ItemGroup>
-    <None Include="web.config" />
+    <None Include="config.json" />
+    <None Include="web.config">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
   </ItemGroup>
 
   <ItemGroup>

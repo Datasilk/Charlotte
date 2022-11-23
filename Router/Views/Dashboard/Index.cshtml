@@ -4,15 +4,7 @@
     Layout = "Dashboard/_Layout";
 }
 
-<style type="text/css">
-    .dashboard{max-width:2100px; margin:0 auto;}
-    .dashboard .item .title{font-weight:bold;}
-    .dashboard .list span.row, .dashboard .list span.col{display:inline-block;}
-    span.uses-cookies{background-color:#bfe7cf; padding:9px 10px 10px 10px !important;}
-    .row.hover:hover .uses-cookies{background-color:#bbf9d3;}
-    span.note{background-color:#f9f5a2; padding:9px 10px 10px 10px !important; margin-left:20px}
-    .row.hover:hover .note{background-color:#fffbae;}
-</style>
+<div class="show-console"><a href="javascript:" onclick="showConsole()">Show Console</a></div>
 
 <div class="dashboard">
     <div class="list">
@@ -41,3 +33,31 @@
     }
     </div>
 </div>
+
+<div class="console">
+    <div class="row pad text-right">
+        <a href="javascript:" onclick="showConsole();">Hide Console</a>
+    </div>
+    <div class="scrollable">
+        <div>
+            Welcome to Charlotte's Web. This console displays live information about
+            requests being made to this server from Collector and those requests 
+            being redirected to an instance of Charlotte to process a web page. Charlotte
+            sends the result to the user via this specialized routing server.
+        </div>
+    </div>
+</div>
+
+<script>
+    function showConsole(){
+        var consl = document.getElementsByClassName('console')[0];
+        if(consl.className.indexOf('show') >= 0){
+            consl.classList.remove('show');
+            consl.classList.add('hide');
+        }else{
+            consl.classList.remove('hide');
+            consl.classList.add('show');
+        }
+    }
+
+</script>
