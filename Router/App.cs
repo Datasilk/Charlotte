@@ -1,6 +1,4 @@
-﻿using System.Text;
-using System.Text.Json;
-using System.IO;
+﻿using System.Text.Json;
 
 namespace Router
 {
@@ -13,9 +11,10 @@ namespace Router
 
     public static class App
     {
+        public static string Version = "0.1";
         public static Models.Config Config { get; set; } = new Models.Config();
         public static string ConfigFilename { get; set; } = "";
-
+        public static List<string> Addresses { get; set; } = new List<string>();
         public static Environment Environment { get; set; } = Environment.development;
         public static bool IsDocker { get; set; }
         private static string _rootPath { get; set; } = "";

@@ -31,6 +31,10 @@
     <None Include="web.config">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
+    <None Include="wwwroot\js\signalr.js" />
+    <None Include="wwwroot\js\signalr.js.map" />
+    <None Include="wwwroot\js\signalr.min.js" />
+    <None Include="wwwroot\js\signalr.min.js.map" />
   </ItemGroup>
 
   <ItemGroup>

@@ -44,6 +44,7 @@
 		<PackageReference Include="cef.redist.x64" Version="103.0.12" />
 		<PackageReference Include="CefSharp.Common.NETCore" Version="103.0.120" />
 		<PackageReference Include="CefSharp.OffScreen.NETCore" Version="103.0.120" />
+		<PackageReference Include="Microsoft.Extensions.Hosting.WindowsServices" Version="6.0.1" />
 		<PackageReference Include="Microsoft.VisualStudio.Azure.Containers.Tools.Targets" Version="1.16.1" />
 		<PackageReference Include="System.ServiceModel.Primitives" Version="4.9.0" />
 	</ItemGroup>

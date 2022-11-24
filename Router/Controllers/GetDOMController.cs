@@ -12,10 +12,11 @@ namespace Router.Controllers
         [HttpPost]
         public string Index(string url, bool session = false, string macros = "")
         {
+            var requestId = 1 + new Random().Next(99999) + ": ";
             try
             {
-
                 //find unused instance of Charlotte to collect the DOM from
+                Log.WriteLine(requestId + "New request (<a href=\"" + url + "\" target=\"_blank\">" + url + "</a>)" + (session ? " with session" : ""));
                 ConfigCharlotteInstance? instance = null;
                 var start = DateTime.Now;
                 while (instance == null)
@@ -23,12 +24,17 @@ namespace Router.Controllers
                     instance = App.Config.Charlotte.Instances.Where(a => a.UsesCookies == session)
                         .OrderBy(a => a.Started).FirstOrDefault();
                     if((DateTime.Now - start).TotalSeconds > 10)
-                    { 
-                        return "Error: Timeout when waiting for available Charlotte instance"; 
+                    {
+                        var err = "Timeout when waiting for available Charlotte instance";
+                        Log.WriteLine(requestId + err);
+                        return "Error: " + err; 
                     }
                     Thread.Sleep(500);
                 }
-                Console.WriteLine("found instance " + instance.Id + " (" + instance.Url + ")");
+
+                var msg = "using instance " + instance.Id + " (" + instance.Url + ")";
+                Log.WriteLine(requestId + msg);
+                Console.WriteLine(msg);
                 //instance is in use //////////////////////////
                 instance.InUse = true;
                 instance.Started = DateTime.Now;
@@ -43,11 +49,15 @@ namespace Router.Controllers
                     HttpClient client = new HttpClient();
                     HttpResponseMessage message = client.PostAsync(instance.Url, postContent).GetAwaiter().GetResult();
                     result = message.Content.ReadAsStringAsync().GetAwaiter().GetResult();
+                    var size = ((result.Length * 2) / 1024.0);
+                    Log.WriteLine(requestId + "response size = " + size.ToString("N1") + "kb");
                 }
                 catch(Exception ex)
                 {
                     instance.InUse = false;
-                    return "Error: " + ex.Message + "\n" + ex.StackTrace;
+                    msg =  ex.Message + "\n" + ex.StackTrace;
+                    Log.WriteLine(requestId + msg);
+                    return "Error: " + msg;
                 }
 
                 //reset instance use ///////////////////////////
@@ -56,7 +66,9 @@ namespace Router.Controllers
             }
             catch(Exception ex)
             {
-                return "Error: " + ex.Message + "\n" + ex.StackTrace;
+                var msg = ex.Message + "\n" + ex.StackTrace;
+                Log.WriteLine(requestId + msg);
+                return "Error: " + msg;
             }
         }
 

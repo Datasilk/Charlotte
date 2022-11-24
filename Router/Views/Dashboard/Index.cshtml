@@ -39,7 +39,7 @@
         <a href="javascript:" onclick="showConsole();">Hide Console</a>
     </div>
     <div class="scrollable">
-        <div>
+        <div class="note">
             Welcome to Charlotte's Web. This console displays live information about
             requests being made to this server from Collector and those requests 
             being redirected to an instance of Charlotte to process a web page. Charlotte
@@ -48,16 +48,5 @@
     </div>
 </div>
 
-<script>
-    function showConsole(){
-        var consl = document.getElementsByClassName('console')[0];
-        if(consl.className.indexOf('show') >= 0){
-            consl.classList.remove('show');
-            consl.classList.add('hide');
-        }else{
-            consl.classList.remove('hide');
-            consl.classList.add('show');
-        }
-    }
-
-</script>
+<script src="/js/signalr.js"></script>
+<script src="/js/dashboard.js"></script>

@@ -1,3 +1,7 @@
+using Microsoft.AspNetCore.Hosting.Server.Features;
+using Microsoft.AspNetCore.Hosting.Server;
+using Microsoft.Extensions.Hosting;
+
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
@@ -9,6 +13,7 @@ builder.Services.AddSession(options =>
     options.Cookie.Name = ".Charlottes.Web.Router";
     options.Cookie.IsEssential = true;
 });
+builder.Services.AddSignalR();
 
 var app = builder.Build();
 
@@ -21,13 +26,14 @@ if (!app.Environment.IsDevelopment())
 }
 
 app.UseSession();
-app.UseHttpsRedirection();
+//app.UseHttpsRedirection();
 app.UseStaticFiles();
 app.UseRouting();
 app.UseAuthorization();
 
+
 //check if app is running in Docker Container
-Router.App.IsDocker = Environment.GetEnvironmentVariable("DOTNET_RUNNING_IN_CONTAINER") == "true";
+Router.App.IsDocker = System.Environment.GetEnvironmentVariable("DOTNET_RUNNING_IN_CONTAINER") == "true";
 
 switch (app.Environment.EnvironmentName.ToLower())
 {
@@ -56,4 +62,21 @@ app.MapControllerRoute(
     name: "default",
     pattern: "{controller=Home}/{action=Index}/{id?}");
 
-app.Run();
+
+app.MapHub<Router.SignalR.DashboardHub>("/dashboardhub");
+
+app.Start();
+
+//get IP addresses for running application
+var server = app.Services.GetRequiredService<IServer>();
+var addressFeature = server.Features.Get<IServerAddressesFeature>();
+if (addressFeature != null)
+{
+    foreach (var address in addressFeature.Addresses)
+    {
+        Console.WriteLine($"Listening to {address}");
+        Router.App.Addresses.Add(address);
+    }
+}
+
+app.WaitForShutdown();

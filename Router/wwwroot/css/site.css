@@ -3193,6 +3193,12 @@ span.note {
   overflow-x: hidden;
   height: calc(100% - 40px);
 }
+.console .scrollable > div {
+  padding-bottom: 15px;
+}
+.console .scrollable .note {
+  font-size: 11px;
+}
 .console.show {
   animation: ease-out 0.3s console-slidein;
   left: 0%;

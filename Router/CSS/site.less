@@ -19,7 +19,10 @@ span.note{background-color:#f9f5a2; padding:9px 10px 10px 10px !important; margi
 .console{position:fixed; top:50px; width:100%; max-width:700px; height:100%; max-height:600px; left:-100%; 
         background:rgb(10,10,10); border-radius:10px; overflow:hidden; padding:20px;
         color:#aaa; font-family:monospace;
-    .scrollable{ overflow-y:auto; overflow-x:hidden; height:~"calc(100% - 40px)";}
+    .scrollable{ overflow-y:auto; overflow-x:hidden; height:~"calc(100% - 40px)";
+        & > div{padding-bottom:15px;}
+        .note{font-size:11px;}
+    }
 }
 .console.show{ animation:ease-out 0.3s console-slidein; left:0%;}
 .console.hide{ animation:ease-out 0.3s console-slideout; left:-100%;}
