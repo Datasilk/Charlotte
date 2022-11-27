@@ -5,7 +5,7 @@
     <Nullable>enable</Nullable>
     <ImplicitUsings>enable</ImplicitUsings>
     <DockerDefaultTargetOS>Linux</DockerDefaultTargetOS>
-	<CefSharpBuildAction>Content</CefSharpBuildAction>
+	  <CefSharpBuildAction>Content</CefSharpBuildAction>
   </PropertyGroup>
 
   <ItemGroup>
@@ -41,12 +41,24 @@
   </ItemGroup>
 
 	<ItemGroup>
-		<PackageReference Include="cef.redist.x64" Version="103.0.12" />
-		<PackageReference Include="CefSharp.Common.NETCore" Version="103.0.120" />
-		<PackageReference Include="CefSharp.OffScreen.NETCore" Version="103.0.120" />
-		<PackageReference Include="Microsoft.Extensions.Hosting.WindowsServices" Version="6.0.1" />
-		<PackageReference Include="Microsoft.VisualStudio.Azure.Containers.Tools.Targets" Version="1.16.1" />
-		<PackageReference Include="System.ServiceModel.Primitives" Version="4.9.0" />
+		<PackageReference Include="cef.redist.x64" Version="107.1.9" />
+		<PackageReference Include="CefSharp.Common.NETCore" Version="107.1.90" />
+		<PackageReference Include="CefSharp.OffScreen.NETCore" Version="107.1.90" />
+		<PackageReference Include="Microsoft.Extensions.Hosting.WindowsServices" Version="7.0.0" />
+		<PackageReference Include="Microsoft.VisualStudio.Azure.Containers.Tools.Targets" Version="1.17.0" />
+		<PackageReference Include="System.ServiceModel.Primitives" Version="4.10.0" />
+	</ItemGroup>
+
+	<ItemGroup>
+	  <PackageReference Update="chromiumembeddedframework.runtime.win-arm64" Version="107.1.9" />
+	</ItemGroup>
+
+	<ItemGroup>
+	  <PackageReference Update="chromiumembeddedframework.runtime.win-x64" Version="107.1.9" />
+	</ItemGroup>
+
+	<ItemGroup>
+	  <PackageReference Update="chromiumembeddedframework.runtime.win-x86" Version="107.1.9" />
 	</ItemGroup>
 
 </Project>
