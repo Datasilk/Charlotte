@@ -35,9 +35,58 @@
 </div>
 
 <div class="console">
-    <div class="row pad text-right">
-        <a href="javascript:" onclick="showConsole();">Hide Console</a>
+    <div class="row pad">
+        <div class="col btn-checkurl">
+            <a href="javascript:" onclick="toggleCheckUrl();">Check URL</a>
+        </div>
+        <div class="col right">
+            <a href="javascript:" onclick="showConsole();">Hide Console</a>
+        </div>
     </div>
+
+    <div class="row check-url hide">
+        <div class="row text">
+            <h5>Check URL using Charlotte</h5>
+        </div>
+        <div class="row hover">
+            <div class="col field">URL</div>
+            <div class="col input"><input type="text" id="charlotte_url" placeholder="https://www.datasilk.io" /></div>
+        </div>
+        <div class="row hover">
+            <div class="col field"></div>
+            <div class="col input">
+                <input type="checkbox" id="charlotte_session" value="1" />
+                <label for="charlotte_session">Use Session</label>
+            </div>
+        </div>
+        <div class="row hover">
+            <div class="col field">Macros</div>
+            <div class="col input expand">
+                <textarea id="charlotte_macros"></textarea>
+            </div>
+        </div>
+        <div class="row pad text-right">
+            <div class="col">
+                <button type="submit" class="cancel" onclick="toggleCheckUrl()">Cancel</button>
+            </div>
+            <div class="col">
+                <button onclick="submitUrl()">Send URL to Charlotte</button>
+            </div>
+        </div>
+        <hr/>
+    </div>
+
+    <div class="charlotte-result hide pad">
+        <h6>Result for</h6>
+        <textarea id="charlotte_result" style="width:100%; height:500px"></textarea>
+        <div class="row pad text-right">
+            <div class="col">
+                <button type="submit" class="cancel" onclick="toggleCharlotteResult()">Close Result</button>
+            </div>
+        </div>
+        <hr/>
+    </div>
+
     <div class="scrollable">
         <div class="note">
             Welcome to Charlotte's Web. This console displays live information about

@@ -1,6 +1,10 @@
+using Charlotte;
 using System.Text.Json;
 
+Chrome.Browser = new Browser();
+
 var builder = WebApplication.CreateBuilder(args);
+builder.Logging.ClearProviders().AddProvider(new CharlotteLoggerProvider(null));
 
 // Add services to the container.
 builder.Services.AddControllers();
@@ -8,9 +12,9 @@ var app = builder.Build();
 app.UseAuthorization();
 
 //load blacklist.json
-if (File.Exists(Charlotte.App.MapPath("blacklist.json")))
+if (File.Exists(App.MapPath("blacklist.json")))
 {
-    Charlotte.Settings.BlacklistedDomains = JsonSerializer.Deserialize<string[]>(File.ReadAllText(Charlotte.App.MapPath("blacklist.json"))) ?? new string[] { };
+    Settings.BlacklistedDomains = JsonSerializer.Deserialize<string[]>(File.ReadAllText(App.MapPath("blacklist.json"))) ?? new string[] { };
 }
 
 app.MapControllerRoute(

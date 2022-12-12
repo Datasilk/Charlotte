@@ -32,6 +32,10 @@ namespace Charlotte
             //cef.CefCommandLineArgs.Add("disable-spell-checking", null);
             //cef.CefCommandLineArgs.Add("disable-pdf-extension", null);
             cef.LogSeverity = LogSeverity.Error;
+            cef.CachePath = App.MapPath("cefsharp");
+            cef.LogFile = App.MapPath("cefsharp/cefsharp.log");
+            //cef.BrowserSubprocessPath = App.MapPath("/");
+            cef.LocalesDirPath = App.MapPath("locales");
             Cef.Initialize(cef);
         }
         

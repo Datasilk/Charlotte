@@ -6,6 +6,8 @@
     <ImplicitUsings>enable</ImplicitUsings>
     <DockerDefaultTargetOS>Linux</DockerDefaultTargetOS>
 	  <CefSharpBuildAction>Content</CefSharpBuildAction>
+	  <AllowUnsafeBlocks>True</AllowUnsafeBlocks>
+	  <Platforms>AnyCPU;x64</Platforms>
   </PropertyGroup>
 
   <ItemGroup>
@@ -44,6 +46,7 @@
 		<PackageReference Include="cef.redist.x64" Version="107.1.9" />
 		<PackageReference Include="CefSharp.Common.NETCore" Version="107.1.90" />
 		<PackageReference Include="CefSharp.OffScreen.NETCore" Version="107.1.90" />
+		<PackageReference Include="Crayon" Version="2.0.69" />
 		<PackageReference Include="Microsoft.Extensions.Hosting.WindowsServices" Version="7.0.0" />
 		<PackageReference Include="Microsoft.VisualStudio.Azure.Containers.Tools.Targets" Version="1.17.0" />
 		<PackageReference Include="System.ServiceModel.Primitives" Version="4.10.0" />

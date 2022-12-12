@@ -10,6 +10,8 @@ blacklist.json
 config.json
 config.*.json
 !config.template.json
+.config/
+Charlotte/cefsharp/
 
 # Build results
 [Dd]ebug/

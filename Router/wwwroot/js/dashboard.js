@@ -15,9 +15,38 @@ function showConsole() {
         if (dashboardHub == null) {
             dashboardHub = new signalR.HubConnectionBuilder().withUrl('/dashboardhub').build();
             dashboardHub.on('update', logEvent);
+            dashboardHub.on('response', toggleCharlotteResult);
             dashboardHub.start().catch(hubError);
             setTimeout(() => { dashboardHub.invoke('UpdateConsole'); }, 500);
         }
+    }
+}
+
+function toggleCheckUrl() {
+    var modal = document.getElementsByClassName('check-url')[0];
+    var btn = document.getElementsByClassName('btn-checkurl')[0];
+    if (modal.className.indexOf('hide') >= 0) {
+        modal.classList.remove('hide');
+        btn.classList.add('hide');
+    } else {
+        modal.classList.add('hide');
+        btn.classList.remove('hide');
+    }
+}
+
+function submitUrl() {
+    dashboardHub.invoke('CheckUrl', charlotte_url.value, charlotte_session.checked, charlotte_macros.value);
+}
+
+function toggleCharlotteResult(result) {
+    var modal = document.getElementsByClassName('charlotte-result')[0];
+    if (modal.className.indexOf('hide') >= 0) {
+        modal.classList.remove('hide');
+        charlotte_result.value = result;
+        document.querySelectorAll('.charlotte-result h6')[0].innerHTML = 'Results for ' + charlotte_url.value;
+        toggleCheckUrl();
+    } else {
+        modal.classList.add('hide');
     }
 }
 

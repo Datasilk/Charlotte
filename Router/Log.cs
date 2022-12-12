@@ -14,6 +14,7 @@ namespace Router
             {
                 try
                 {
+                    //send message to all SignalR clients
                     listener.SendAsync("update", message);
                 }
                 catch (Exception)
@@ -23,6 +24,7 @@ namespace Router
             }
             if(remove.Count > 0)
             {
+                //clean up disconnected listeners
                 foreach(var r in remove)
                 {
                     Listeners.Remove(r);

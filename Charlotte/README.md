@@ -3,7 +3,7 @@ An off-screen Chromium web browser used to extract the computed DOM from any web
 
 ### Installation
 1. Build project
-2. execute `bin/x64/Debug/Charlotte.exe -register` in PowerShell to register the console application as a Windows Service, which will automatically start the WCF Hosted Service
+2. execute `bin/x64/Debug/Charlotte.exe` in PowerShell to run the service in the background
 3. Using WCF in your own project, connect to `http://localhost:7077/Browser` and retrieve the computed DOM element hierarchy as a JSON string:
 
 

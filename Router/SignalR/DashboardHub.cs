@@ -1,4 +1,5 @@
 ﻿using Microsoft.AspNetCore.SignalR;
+using Router.Common;
 
 namespace Router.SignalR
 {
@@ -11,6 +12,15 @@ namespace Router.SignalR
                 );
 
             Log.Listeners.Add(Clients.Caller);
+        }
+
+        public async Task CheckUrl(string url, bool session, string macros)
+        {
+            var requestId = 1 + new Random().Next(99999);
+            var logPrefix = requestId + ": ";
+            Log.WriteLine(logPrefix + "Checking URL " + url + "..............................");
+            var dom = Charlotte.GetDOM(url, session, macros, out requestId);
+            await Clients.Caller.SendAsync("response", dom);
         }
     }
 }

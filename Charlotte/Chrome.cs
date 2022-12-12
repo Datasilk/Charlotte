@@ -2,6 +2,6 @@
 {
     public static class Chrome
     {
-        public static readonly IBrowser Browser = new Browser();
+        public static IBrowser Browser { get; set; }
     }
 }

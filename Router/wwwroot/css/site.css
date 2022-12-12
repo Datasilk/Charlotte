@@ -3124,6 +3124,411 @@ header a:active {
 .list .item {
   border-bottom: 1px solid rgba(0, 0, 0, 0.1);
 }
+.console {
+  background: #0a0a0a;
+  color: #aaa;
+}
+.console h1,
+.console h2,
+.console h3,
+.console h4,
+.console h5,
+.console h6 {
+  color: #aaa;
+}
+.console .faded {
+  color: rgba(170, 170, 170, 0.3);
+}
+.console .price {
+  color: #009B87;
+}
+.console .positive {
+  color: #4DA400;
+}
+.console .negative,
+.console .error {
+  color: #FF2222;
+}
+.console .time {
+  color: #376EB2;
+}
+.console .row {
+  background: transparent;
+  color: #aaa;
+}
+.console .row a:link {
+  color: #6200ff;
+}
+.console .row a:visited {
+  color: #6200ff;
+}
+.console .row a:hover {
+  color: #9100ff;
+}
+.console .row a:active {
+  color: #c000ff;
+}
+.console .row use {
+  color: #555;
+  fill: #555;
+}
+.console .row a:link use {
+  color: #555;
+  fill: #555;
+}
+.console .row a:visited use {
+  color: #555;
+  fill: #555;
+}
+.console .row a:hover use {
+  color: #444;
+  fill: #444;
+}
+.console .row a:active use {
+  color: #444;
+  fill: #444;
+}
+.console .row a.text:link {
+  color: #aaa;
+}
+.console .row a.text:visited {
+  color: #aaa;
+}
+.console .row a.text:hover {
+  color: #aaa;
+}
+.console .row a.text:active {
+  color: #aaa;
+}
+.console .row.hover:hover {
+  background: #2a2a2a;
+  color: #a38aab;
+}
+.console .row.hover:hover a:link {
+  color: #9100ff;
+}
+.console .row.hover:hover a:visited {
+  color: #9100ff;
+}
+.console .row.hover:hover a:hover {
+  color: #9100ff;
+}
+.console .row.hover:hover a:active {
+  color: #c000ff;
+}
+.console .row.hover:hover use {
+  color: #444;
+  fill: #444;
+}
+.console .row.hover:hover a:link use {
+  color: #444;
+  fill: #444;
+}
+.console .row.hover:hover a:visited use {
+  color: #444;
+  fill: #444;
+}
+.console .row.hover:hover a:hover use {
+  color: #444;
+  fill: #444;
+}
+.console .row.hover:hover a:active use {
+  color: #444;
+  fill: #444;
+}
+.console .row.selected,
+.console .row.selected:hover {
+  background: #56325b;
+  color: #a38aab;
+}
+.console .row.selected a:link,
+.console .row.selected:hover a:link {
+  color: #c000ff;
+}
+.console .row.selected a:visited,
+.console .row.selected:hover a:visited {
+  color: #c000ff;
+}
+.console .row.selected a:hover,
+.console .row.selected:hover a:hover {
+  color: #9100ff;
+}
+.console .row.selected a:active,
+.console .row.selected:hover a:active {
+  color: #c000ff;
+}
+.console .row.selected use,
+.console .row.selected:hover use {
+  color: #444;
+  fill: #444;
+}
+.console .row.selected a:link use,
+.console .row.selected:hover a:link use {
+  color: #444;
+  fill: #444;
+}
+.console .row.selected a:visited use,
+.console .row.selected:hover a:visited use {
+  color: #444;
+  fill: #444;
+}
+.console .row.selected a:hover use,
+.console .row.selected:hover a:hover use {
+  color: #444;
+  fill: #444;
+}
+.console .row.selected a:active use,
+.console .row.selected:hover a:active use {
+  color: #444;
+  fill: #444;
+}
+.console .row.selected a:link,
+.console .row.selected:hover a:link {
+  color: #c000ff;
+}
+.console .row.selected a:visited,
+.console .row.selected:hover a:visited {
+  color: #c000ff;
+}
+.console .row.selected a:hover,
+.console .row.selected:hover a:hover {
+  color: #9100ff;
+}
+.console .row.selected a:active,
+.console .row.selected:hover a:active {
+  color: #c000ff;
+}
+.console a:link {
+  color: #6200ff;
+}
+.console a:visited {
+  color: #6200ff;
+}
+.console a:hover {
+  color: #9100ff;
+}
+.console a:active {
+  color: #c000ff;
+}
+.console input:not([type=button]):not([type=submit]):not([type=radio]),
+.console textarea,
+.console select {
+  background: #3f3f3f;
+  color: #bababa;
+  border-color: #6d6d6d;
+}
+.console input:not([type=button]):not([type=submit]):not([type=radio])::-webkit-input-placeholder {
+  /* Chrome/Opera/Safari */
+  color: #bababa;
+}
+.console input:not([type=button]):not([type=submit]):not([type=radio])::-moz-placeholder {
+  /* Firefox 19+ */
+  color: #bababa;
+}
+.console input:not([type=button]):not([type=submit]):not([type=radio]):-ms-input-placeholder {
+  /* IE 10+ */
+  color: #bababa;
+}
+.console textarea::-webkit-input-placeholder {
+  color: #bababa;
+}
+.console textarea::-moz-placeholder {
+  /* Firefox 19+ */
+  color: #bababa;
+}
+.console input:not([type=button]):not([type=submit]):not([type=radio]):hover,
+.console textarea:hover,
+.console select:hover {
+  background: #3f3f3f;
+  color: #bababa;
+  border-color: #6d6d6d;
+}
+.console .row.hover:hover input:not([type=button]):not([type=submit]):not([type=radio]),
+.console .row.hover:hover textarea,
+.console .row.hover:hover select {
+  background: #3f3f3f;
+  color: #bababa;
+  border-color: #6d6d6d;
+}
+.console input:not([type=button]):not([type=submit]):not([type=radio]):focus,
+.console textarea:focus,
+.console select:focus {
+  background: #3f3f3f !important;
+  color: #bababa !important;
+  border-color: #6d6d6d !important;
+  outline-color: #6d6d6d !important;
+}
+.console a:focus {
+  outline-color: #6d6d6d;
+}
+.console .col.field {
+  color: #8c8c8c;
+}
+.console .row.hover:hover .col.field {
+  color: #9c74ff;
+}
+.console button,
+.console .button,
+.console a.button {
+  background: #003ec4;
+  color: #fff !important;
+}
+.console button:hover,
+.console .button:hover,
+.console a.button:hover,
+.console button:focus,
+.console .button:focus,
+.console a.button:focus {
+  background: #1158f0;
+  color: #fff !important;
+}
+.console button:active,
+.console .button:active,
+.console a.button:active {
+  background: #1158f0 !important;
+  color: #fff !important;
+}
+.console button.selected,
+.console .button.selected,
+.console a.button.selected {
+  background: #1158f0 !important;
+  color: #fff !important;
+}
+.console button:link,
+.console .button:link,
+.console a.button:link {
+  color: #fff;
+}
+.console button:visited,
+.console .button:visited,
+.console a.button:visited {
+  color: #fff;
+}
+.console button:hover,
+.console .button:hover,
+.console a.button:hover {
+  color: #fff;
+}
+.console button:active,
+.console .button:active,
+.console a.button:active {
+  color: #fff;
+}
+.console button use,
+.console .button use,
+.console a.button use {
+  color: #fff !important;
+  fill: #fff !important;
+}
+.console button a:link use,
+.console .button a:link use,
+.console a.button a:link use {
+  color: #fff !important;
+  fill: #fff !important;
+}
+.console button a:visited use,
+.console .button a:visited use,
+.console a.button a:visited use {
+  color: #fff !important;
+  fill: #fff !important;
+}
+.console button a:hover use,
+.console .button a:hover use,
+.console a.button a:hover use {
+  color: #fff !important;
+  fill: #fff !important;
+}
+.console button a:active use,
+.console .button a:active use,
+.console a.button a:active use {
+  color: #fff !important;
+  fill: #fff !important;
+}
+.console button.cancel,
+.console .button.cancel,
+.console a.button.cancel {
+  background: #4e4e4e;
+  color: #fff !important;
+}
+.console button.cancel:hover,
+.console .button.cancel:hover,
+.console a.button.cancel:hover,
+.console button.cancel:focus,
+.console .button.cancel:focus,
+.console a.button.cancel:focus {
+  background: #777777;
+  color: #fff !important;
+}
+.console button.cancel:active,
+.console .button.cancel:active,
+.console a.button.cancel:active {
+  background: #777777 !important;
+  color: #fff !important;
+}
+.console button.cancel.selected,
+.console .button.cancel.selected,
+.console a.button.cancel.selected {
+  background: #777777 !important;
+  color: #fff !important;
+}
+.console button.cancel:link,
+.console .button.cancel:link,
+.console a.button.cancel:link {
+  color: #fff;
+}
+.console button.cancel:visited,
+.console .button.cancel:visited,
+.console a.button.cancel:visited {
+  color: #fff;
+}
+.console button.cancel:hover,
+.console .button.cancel:hover,
+.console a.button.cancel:hover {
+  color: #fff;
+}
+.console button.cancel:active,
+.console .button.cancel:active,
+.console a.button.cancel:active {
+  color: #fff;
+}
+.console button.cancel use,
+.console .button.cancel use,
+.console a.button.cancel use {
+  color: #fff !important;
+  fill: #fff !important;
+}
+.console button.cancel a:link use,
+.console .button.cancel a:link use,
+.console a.button.cancel a:link use {
+  color: #fff !important;
+  fill: #fff !important;
+}
+.console button.cancel a:visited use,
+.console .button.cancel a:visited use,
+.console a.button.cancel a:visited use {
+  color: #fff !important;
+  fill: #fff !important;
+}
+.console button.cancel a:hover use,
+.console .button.cancel a:hover use,
+.console a.button.cancel a:hover use {
+  color: #fff !important;
+  fill: #fff !important;
+}
+.console button.cancel a:active use,
+.console .button.cancel a:active use,
+.console a.button.cancel a:active use {
+  color: #fff !important;
+  fill: #fff !important;
+}
+.console hr {
+  border: 0;
+  border-top: 1px solid #ffffff44;
+  margin-bottom: 20px;
+}
+.charlotte-result {
+  margin-top: -20px;
+}
 header {
   padding: 10px 20px;
 }
@@ -3181,11 +3586,9 @@ span.note {
   height: 100%;
   max-height: 600px;
   left: -100%;
-  background: #0a0a0a;
   border-radius: 10px;
   overflow: hidden;
   padding: 20px;
-  color: #aaa;
   font-family: monospace;
 }
 .console .scrollable {
@@ -3222,4 +3625,8 @@ span.note {
   100% {
     left: -100%;
   }
+}
+#charlotte_macros {
+  width: 100%;
+  height: 100px;
 }
