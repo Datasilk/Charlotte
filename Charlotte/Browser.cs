@@ -34,7 +34,10 @@ namespace Charlotte
             cef.LogSeverity = LogSeverity.Error;
             cef.CachePath = App.MapPath("cefsharp");
             cef.LogFile = App.MapPath("cefsharp/cefsharp.log");
-            //cef.BrowserSubprocessPath = App.MapPath("/");
+            if(App.Environment == Environment.production)
+            {
+                cef.BrowserSubprocessPath = App.MapPath("/");
+            }
             cef.LocalesDirPath = App.MapPath("locales");
             Cef.Initialize(cef);
         }
