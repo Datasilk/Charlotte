@@ -168,8 +168,9 @@ namespace Charlotte
                 {
                     //return log since response timed out
                     browser.Dispose();
-                    Console.WriteLine("/////////////////////////////////////////////////////////////");
-                    Console.WriteLine("Timeout >> " + log.ToString());
+                    Console.WriteLine("Start Error Log /////////////////////////////////////////////////////////////");
+                    Console.WriteLine(log.ToString());
+                    Console.WriteLine("End of Error Log ////////////////////////////////////////////////////////////");
                     return "log: " + log.ToString();
                 }
             }

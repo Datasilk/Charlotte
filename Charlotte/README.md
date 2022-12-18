@@ -1,10 +1,13 @@
 # Charlotte
-An off-screen Chromium web browser used to extract the computed DOM from any web page using .NET Core WCF.
+An off-screen Chromium web browser used to extract the computed DOM in JSON format from any web page using an API endpoint.
+
+### Configuration
+Use `appsettings.json` to configure the domain & port that the API endpoint will reside on.
 
 ### Installation
-1. Build project
-2. execute `bin/x64/Debug/Charlotte.exe` in PowerShell to run the service in the background
-3. Using WCF in your own project, connect to `http://localhost:7077/Browser` and retrieve the computed DOM element hierarchy as a JSON string:
+1. Build or publish project
+2. In PowerShell, run `./Charlotte.exe` after navigating to the published folder to start the Charlotte service.
+3. Follow the instructions to install & configure the Router application to access Charlotte remotely.
 
 
 **IBrowser.cs**
