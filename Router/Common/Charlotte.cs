@@ -32,7 +32,10 @@ namespace Router.Common
 
                 var msg = "using instance " + instance.Id + " (" + instance.Url + ")";
                 Log.WriteLine(logPrefix + msg);
-                Console.WriteLine(msg);
+                if(App.Environment == Environment.development)
+                {
+                    Console.WriteLine(msg);
+                }
                 //instance is in use //////////////////////////
                 instance.InUse = true;
                 instance.Started = DateTime.Now;

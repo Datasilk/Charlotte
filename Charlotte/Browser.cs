@@ -40,8 +40,48 @@ namespace Charlotte
             }
             cef.LocalesDirPath = App.MapPath("locales");
             Cef.Initialize(cef);
+
+            /*
+             var cef = new CefSettings();
+            cef.CefCommandLineArgs.Add("enable-media-stream", "0");
+            cef.CefCommandLineArgs.Add("disable-image-loading", "1");
+            cef.CefCommandLineArgs.Add("disable-extensions", "1");
+            cef.CefCommandLineArgs.Add("disable-javascript-access-clipboard", "1");
+            cef.CefCommandLineArgs.Add("disable-webgl", "1");
+            cef.CefCommandLineArgs.Add("disable-gpu", "1");
+            cef.CefCommandLineArgs.Add("disable-gpu-vsync", "1");
+            cef.CefCommandLineArgs.Add("disable-software-rasterizer", "1");
+            cef.CefCommandLineArgs.Add("disable-accelerated-2d-canvas", "1");
+            cef.CefCommandLineArgs.Add("disable-crash-reporter", "1");
+            //cef.CefCommandLineArgs.Add("disable-highres-timer", "1");
+            cef.CefCommandLineArgs.Add("disable-in-process-stack-traces", "1");
+            cef.CefCommandLineArgs.Add("disable-logging", "1");
+            cef.CefCommandLineArgs.Add("disable-remote-fonts", "1");
+            cef.CefCommandLineArgs.Add("disable-speech-api", "1");
+            //cef.CefCommandLineArgs.Add("enable-automation", "1");
+            cef.CefCommandLineArgs.Add("no-crash-upload", "1");
+            cef.CefCommandLineArgs.Add("no-report-upload", "1");
+            cef.CefCommandLineArgs.Add("no-default-browser-check", "1");
+            cef.CefCommandLineArgs.Add("no-experiments", "1");
+            cef.CefCommandLineArgs.Add("no-first-run", "1");
+            cef.CefCommandLineArgs.Add("noerrdialogs", "1");
+            cef.CefCommandLineArgs.Add("block-new-web-contents", "1"); //blocks all pop-up windows
+            //cef.CefCommandLineArgs.Add("browser-test", "1"); //disables many unneccessary features in Chrome
+            //cef.CefCommandLineArgs.Add("safebrowsing-enable-enhanced-protection", "1");
+            //cef.CefCommandLineArgs.Add("single-process", "1");
+            //cef.CefCommandLineArgs.Add("disable-spell-checking", null);
+            //cef.CefCommandLineArgs.Add("disable-pdf-extension", null);
+            cef.LogSeverity = LogSeverity.Error;
+            cef.LogFile = App.MapPath("cefsharp/cefsharp.log");
+
+            //make sure every request uses a clean cache
+            cef.CefCommandLineArgs.Add("incognito", "1");
+            cef.CefCommandLineArgs.Add("persist-session-cookies", "0");
+            //cef.CefCommandLineArgs.Add("aggressive-cache-discard", "1");
+            cef.CachePath = ""; //incognito mode //cef.CachePath = App.MapPath("cefsharp"); 
+            */
         }
-        
+
         public string Collect(string url)
         {
             var html = "";
