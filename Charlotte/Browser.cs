@@ -1,6 +1,5 @@
 ﻿using System.Text;
 using System.Text.Json;
-using System.Reflection;
 using System.ServiceModel;
 using CefSharp;
 using CefSharp.OffScreen;
@@ -115,10 +114,16 @@ namespace Charlotte
                 //Frame Load End Event
                 browser.FrameLoadEnd += delegate (object? sender, FrameLoadEndEventArgs e)
                 {
-                    log.AppendLine("End loading (" + e.HttpStatusCode + "): " + e.Url);
-                    //Console.WriteLine("End loading (" + e.HttpStatusCode + "): " + e.Url);
                     if (html != "") { return; }
-                    if(e.Frame.Identifier != browser.GetMainFrame().Identifier) { return; }
+                    if(e.Frame.Identifier != browser.GetMainFrame().Identifier)
+                    {
+                        log.AppendLine("End loading iframe (" + e.HttpStatusCode + "): " + e.Url);
+                        return;
+                    }
+                    else
+                    {
+                        log.AppendLine("End loading main frame (" + e.HttpStatusCode + "): " + e.Url);
+                    }
                     if (redirecting == false || (redirecting == true && e.Frame.Url == url))
                     {
                         redirecting = false;
@@ -198,6 +203,7 @@ namespace Charlotte
                     if (html != "")
                     {
                         //Console.WriteLine("downloaded " + browser.Address);
+                        browser.GetBrowserHost().CloseBrowser(true);
                         browser.Dispose();
                         return html;
                     }
@@ -207,6 +213,7 @@ namespace Charlotte
                 if (html == "")
                 {
                     //return log since response timed out
+                    browser.GetBrowserHost().CloseBrowser(true);
                     browser.Dispose();
                     Console.WriteLine("Start Error Log /////////////////////////////////////////////////////////////");
                     Console.WriteLine(log.ToString());
@@ -219,6 +226,7 @@ namespace Charlotte
                 //return error information
                 try
                 {
+                    browser.GetBrowserHost().CloseBrowser(true);
                     browser.Dispose();
                 }
                 catch (Exception) { }
