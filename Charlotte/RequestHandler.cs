@@ -16,6 +16,16 @@ namespace Charlotte
 
             return null;
         }
+
+        //protected override bool OnBeforeBrowse(IWebBrowser chromiumWebBrowser, CefSharp.IBrowser browser, IFrame frame, IRequest request, bool userGesture, bool isRedirect)
+        //{
+        //    if(frame.IsMain == false)
+        //    {
+        //        //do not load iframes
+        //        return false;
+        //    }
+        //    return true;
+        //}
     }
 
     public class CustomResourceRequestHandler : CefSharp.Handler.ResourceRequestHandler

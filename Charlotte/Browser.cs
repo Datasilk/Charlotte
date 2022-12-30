@@ -16,6 +16,11 @@ namespace Charlotte
     //[ServiceBehavior(InstanceContextMode = InstanceContextMode.Single)]
     public class Browser : IBrowser
     {
+        private string checklazyjs { get; set; } = "";
+        private string lazyjs { get; set; } = "";
+        private string extractDOMjs { get; set; } = "";
+
+
         public Browser(){
             //Initialize Cef
             var cef = new CefSettings();
@@ -79,6 +84,11 @@ namespace Charlotte
             //cef.CefCommandLineArgs.Add("aggressive-cache-discard", "1");
             cef.CachePath = ""; //incognito mode //cef.CachePath = App.MapPath("cefsharp"); 
             */
+
+
+            checklazyjs = File.ReadAllText(Path + "check-lazyload.js");
+            lazyjs = File.ReadAllText(Path + "lazyload.js");
+            extractDOMjs = File.ReadAllText(Path + "extractDOM.js");
         }
 
         public string Collect(string url)
@@ -88,6 +98,7 @@ namespace Charlotte
             var errors = new StringBuilder();
             var redirecting = false;
             ChromiumWebBrowser browser = null;
+            log.AppendLine("loading " + url);
             try
             {
                 //Create Browser Instance
@@ -95,7 +106,7 @@ namespace Charlotte
                 {
                     ImageLoading = CefState.Disabled,
                     WebGl = CefState.Disabled,
-                    WindowlessFrameRate = 5
+                    WindowlessFrameRate = 2
                 };
                 browser = new ChromiumWebBrowser(url, settings);
                 browser.RequestHandler = new RequestHandler();
@@ -103,11 +114,14 @@ namespace Charlotte
                 //Frame Load Start Event
                 browser.FrameLoadStart += delegate (object? sender, FrameLoadStartEventArgs e)
                 {
-                    log.AppendLine("Started loading: " + e.Url + (e.Frame.IsMain ? " (main frame)" : " (iframe)"));
                     //Console.WriteLine("Started loading: " + e.Url + (e.Frame.IsMain ? " (main frame)" : " (iframe)"));
                     if(e.Frame.IsMain == false) { // && e.Url != "about:blank") {
                         //Console.WriteLine("delete iframe");
                         e.Frame.Delete();
+                    }
+                    else
+                    {
+                        log.AppendLine("Started loading frame: " + e.Url);
                     }
                 };
 
@@ -127,41 +141,7 @@ namespace Charlotte
                     if (redirecting == false || (redirecting == true && e.Frame.Url == url))
                     {
                         redirecting = false;
-
-                        Task lazytask = Task.Run(() => {
-                            var lazyjs = File.ReadAllText(Path + "check-lazyload.js");
-                            object result = EvaluateScript(browser, lazyjs);
-                            try
-                            {
-                                if ((bool)result == true)
-                                {
-                                    browser.EvaluateScriptAsync(File.ReadAllText(Path + "lazyload.js"));
-                                    Thread.Sleep(2000);
-                                }
-
-                                //finally, extract the DOM in JSON format
-                                //Console.WriteLine("Run extractDOM.js on URL: " + e.Url);
-                                Task task = Task.Run(() => {
-                                    var js = File.ReadAllText(Path + "extractDOM.js");
-                                    result = EvaluateScript(browser, js);
-                                    try
-                                    {
-                                        html = JsonSerializer.Serialize(result, new JsonSerializerOptions()
-                                        {
-                                            MaxDepth = 256
-                                        });
-                                    }
-                                    catch (Exception ex)
-                                    {
-                                        html = ex.Message + "\n" + ex.StackTrace + "\n\n\n" + result;
-                                    }
-                                });
-                            }
-                            catch (Exception ex)
-                            {
-                                html = ex.Message + "\n" + ex.StackTrace;
-                            }
-                        });
+                        Task lazytask = Task.Run(ExtractDOM);
                     }
                 };
 
@@ -174,10 +154,11 @@ namespace Charlotte
                 //Address Change Event
                 browser.AddressChanged += delegate (object? sender, AddressChangedEventArgs e)
                 {
-                    log.AppendLine("Address Changed: " + e.Address);
+                    log.AppendLine("Address changed: " + e.Address);
                     //Console.WriteLine("Address Changed: " + e.Address);
                     if (e.Address != url)
                     {
+                        log.Append("Redirected from " + url + " to " + e.Address);
                         redirecting = true;
                         url = e.Address;
                         //Console.WriteLine("redirecting = true");
@@ -196,15 +177,50 @@ namespace Charlotte
                     log.AppendLine("Status Message: " + e.Value);
                 };
 
+                void ExtractDOM()
+                {
+                    //scroll to bottom of the page to trigger lazy loading of all images
+                    object result = EvaluateScript(browser, checklazyjs);
+                    try
+                    {
+                        if ((bool)result == true)
+                        {
+                            browser.EvaluateScriptAsync(lazyjs);
+                            Thread.Sleep(2000);
+                        }
+
+                        //finally, extract the DOM in JSON format
+                        Task task = Task.Run(() => {
+                            result = EvaluateScript(browser, extractDOMjs);
+                            try
+                            {
+                                html = JsonSerializer.Serialize(result, new JsonSerializerOptions()
+                                {
+                                    MaxDepth = 256
+                                });
+                            }
+                            catch (Exception ex)
+                            {
+                                html = ex.Message + "\n" + ex.StackTrace + "\n\n\n" + result;
+                            }
+                            browser.GetBrowserHost().CloseBrowser(true);
+                            browser.Dispose();
+                        });
+                    }
+                    catch (Exception ex)
+                    {
+                        html = ex.Message + "\n" + ex.StackTrace;
+                        browser.GetBrowserHost().CloseBrowser(true);
+                        browser.Dispose();
+                    }
+                }
+
                 //check for html response (with 10 second timeout)
                 var i = 0;
-                while (i++ <= (10 * 2))
+                while (i++ <= (12 * 2))
                 {
                     if (html != "")
                     {
-                        //Console.WriteLine("downloaded " + browser.Address);
-                        browser.GetBrowserHost().CloseBrowser(true);
-                        browser.Dispose();
                         return html;
                     }
                     Thread.Sleep(1000 / 2);
@@ -215,9 +231,9 @@ namespace Charlotte
                     //return log since response timed out
                     browser.GetBrowserHost().CloseBrowser(true);
                     browser.Dispose();
-                    Console.WriteLine("Start Error Log /////////////////////////////////////////////////////////////");
+                    Console.WriteLine("No HTML returned /////////////////////////////////////////////////////////////");
                     Console.WriteLine(log.ToString());
-                    Console.WriteLine("End of Error Log ////////////////////////////////////////////////////////////");
+                    Console.WriteLine("//////////////////////////////////////////////////////////////////////////////");
                     return "log: " + log.ToString();
                 }
             }
