@@ -8,6 +8,7 @@ namespace Charlotte
 
         protected override IResourceRequestHandler GetResourceRequestHandler(IWebBrowser chromiumWebBrowser, CefSharp.IBrowser browser, IFrame frame, IRequest request, bool isNavigation, bool isDownload, string requestInitiator, ref bool disableDefaultHandling)
         {
+            if (Settings.BlacklistedDomains == null) return new CustomResourceRequestHandler();
             var found = Settings.BlacklistedDomains.Where(a => request.Url.Contains(a)).FirstOrDefault();
             if (found != null && found != "")
             {

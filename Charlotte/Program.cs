@@ -1,8 +1,6 @@
 using Charlotte;
 using System.Text.Json;
 
-Chrome.Browser = new Browser();
-
 var builder = WebApplication.CreateBuilder(args);
 builder.Logging.ClearProviders().AddProvider(new CharlotteLoggerProvider(null));
 
@@ -10,6 +8,18 @@ builder.Logging.ClearProviders().AddProvider(new CharlotteLoggerProvider(null));
 builder.Services.AddControllers();
 var app = builder.Build();
 app.UseAuthorization();
+
+// Initialize browser after app setup
+try
+{
+    Chrome.Browser = new Browser();
+}
+catch (Exception ex)
+{
+    Console.WriteLine($"ERROR initializing Browser: {ex.Message}");
+    Console.WriteLine($"Stack trace: {ex.StackTrace}");
+    // Continue execution to see if we can get more diagnostic information
+}
 
 //load blacklist.json
 if (File.Exists(App.MapPath("blacklist.json")))

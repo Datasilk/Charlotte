@@ -1,4 +1,4 @@
-﻿using Router.Models;
+using Router.Models;
 using System.Net;
 using System.Text;
 
@@ -47,11 +47,36 @@ namespace Router.Common
                     postData.Append(string.Format("{0}={1}&", WebUtility.HtmlEncode("url"), WebUtility.HtmlEncode(url)));
                     postData.Append(string.Format("{0}={1}", WebUtility.HtmlEncode("macros"), WebUtility.HtmlEncode(macros)));
                     StringContent postContent = new StringContent(postData.ToString(), Encoding.UTF8, "application/x-www-form-urlencoded");
-                    HttpClient client = new HttpClient();
-                    HttpResponseMessage message = client.PostAsync(instance.Url, postContent).GetAwaiter().GetResult();
-                    result = message.Content.ReadAsStringAsync().GetAwaiter().GetResult();
-                    var size = ((result.Length * 2) / 1024.0);
-                    Log.WriteLine(logPrefix + "response size = " + size.ToString("N1") + "kb");
+                    
+                    // Use HttpClient with a longer timeout (30 seconds) to ensure we don't timeout before Charlotte completes
+                    using (HttpClient client = new HttpClient() { Timeout = TimeSpan.FromSeconds(30) })
+                    {
+                        try
+                        {
+                            Log.WriteLine(logPrefix + "Sending request to Charlotte instance");
+                            HttpResponseMessage message = client.PostAsync(instance.Url, postContent).GetAwaiter().GetResult();
+                            
+                            if (!message.IsSuccessStatusCode)
+                            {
+                                Log.WriteLine(logPrefix + "Error response from Charlotte: " + message.StatusCode);
+                                return "Error: Charlotte returned status code " + message.StatusCode;
+                            }
+                            
+                            result = message.Content.ReadAsStringAsync().GetAwaiter().GetResult();
+                            var size = ((result.Length * 2) / 1024.0);
+                            Log.WriteLine(logPrefix + "response size = " + size.ToString("N1") + "kb");
+                        }
+                        catch (TaskCanceledException)
+                        {
+                            Log.WriteLine(logPrefix + "Request to Charlotte timed out after 30 seconds");
+                            return "Error: Request to Charlotte timed out";
+                        }
+                        catch (Exception ex)
+                        {
+                            Log.WriteLine(logPrefix + "Exception during request to Charlotte: " + ex.Message);
+                            throw; // Will be caught by outer catch block
+                        }
+                    }
                 }
                 catch (Exception ex)
                 {

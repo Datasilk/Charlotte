@@ -12,6 +12,7 @@ config.*.json
 !config.template.json
 .config/
 Charlotte/cefsharp/
+Charlotte/locales/
 
 # Build results
 [Dd]ebug/
