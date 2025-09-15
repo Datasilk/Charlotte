@@ -286,7 +286,7 @@ namespace Charlotte
                     object result = EvaluateScript(browser, checklazyjs);
                     try
                     {
-                        if ((bool)result == true)
+                        if (result != null && (bool)result == true)
                         {
                             browser.EvaluateScriptAsync(lazyjs);
                             Thread.Sleep(2000);
@@ -302,6 +302,16 @@ namespace Charlotte
                                 {
                                     MaxDepth = 256
                                 });
+                                if (html.Contains("indexOf"))
+                                {
+                                    Console.WriteLine("");
+                                    Console.WriteLine("Found indexOf in html:");
+                                    Console.WriteLine("");
+                                    Console.WriteLine(html);
+                                    Console.WriteLine("");
+                                    Console.WriteLine("");
+
+                                }
 
                                 if (html == null || html.Trim() == "")
                                 {
@@ -326,7 +336,7 @@ namespace Charlotte
 
                 //check for html response (with 20 second timeout)
                 var i = 0;
-                var maxWaitTime = 20 * 2; // 20 seconds
+                var maxWaitTime = 10 * 2; // 20 seconds
 
                 while (i++ <= maxWaitTime)
                 {
