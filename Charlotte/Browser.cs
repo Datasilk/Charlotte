@@ -103,8 +103,14 @@ namespace Charlotte
             // Other settings
             cef.CefCommandLineArgs.Add("enable-media-stream", "0");
             cef.CefCommandLineArgs.Add("disable-javascript-access-clipboard", "1");
-            cef.CefCommandLineArgs.Add("persist-session-cookies", "0");
+            // Persist cookies like a real browser — a session-less visitor is
+            // exactly what bot detection (DDG anomaly, Google consent) flags.
+            cef.CefCommandLineArgs.Add("persist-session-cookies", "1");
             cef.CefCommandLineArgs.Add("disable-image-loading", "1"); // Disable image loading to improve performance
+
+            // Present a real desktop Chrome user agent — CefSharp's default
+            // advertises the embedded framework.
+            cef.UserAgent = "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/139.0.0.0 Safari/537.36";
 
             // Suppress USB and GCM errors - more aggressive approach
             cef.CefCommandLineArgs.Add("disable-features", "UsbDeviceDetection,GCMAPIProvisioning,NetworkService,NetworkServiceInProcess");
@@ -204,11 +210,10 @@ namespace Charlotte
                 var settings = new BrowserSettings()
                 {
                     ImageLoading = CefState.Disabled,
-                    WebGl = CefState.Disabled,
+                    WebGl = CefState.Enabled,          // an empty WebGL fingerprint is a bot signal
                     WindowlessFrameRate = 1,  // Reduce frame rate to minimum
-                    Databases = CefState.Disabled,     // Disable databases for better performance
                     JavascriptAccessClipboard = CefState.Disabled,
-                    RemoteFonts = CefState.Disabled,
+                    RemoteFonts = CefState.Enabled,    // no fonts = bot signal
                     TabToLinks = CefState.Disabled,
                 };
                 browser = new ChromiumWebBrowser(url, settings);

@@ -13,6 +13,7 @@ config.*.json
 .config/
 Charlotte/cefsharp/
 Charlotte/locales/
+Charlotte/playwright-profile
 
 # Build results
 [Dd]ebug/

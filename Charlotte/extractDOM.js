@@ -71,8 +71,8 @@
             //check for invalid tags
             switch (knownTags[parent.t]) {
                 case "style": case "script": case "link": case "svg": case "canvas": case "object":
-                case "embed": case "input": case "select": case "button": case "audio":
-                case "textarea": case "iframe": case "area": case "map": case "noscript":
+                case "embed": case "audio":
+                case "iframe": case "area": case "map": case "noscript":
                     return null;
             }
 
@@ -88,10 +88,9 @@
             //get attributes for node
             for (var x = 0; x < attrs.length; x++) {
                 switch (attrs[x].name) {
-                    case "style": case "id": case "tabindex": case "index": case "role": case "onclick":
+                    case "style": case "tabindex": case "index": case "role": case "onclick":
                     case "onchange": case "oninput": case "onsubmit": case "rel": case "loading": case "for":
                     case "width": case "height": case "media": case "itemscope": case "alt": case "enctype":
-                    case "method":
                         //ignore unwanted attributes
                         break;
                     case "class":
@@ -112,7 +111,7 @@
                         if (attrs[x].name == "itemprop" && attrs[x].value == 'image') { break }
                         if (attrs[x].name.indexOf('data-src') == 0) {
                         } else if (attrs[x].name.indexOf('data-') == 0) { break; }
-                        if (attrs[x].name.indexOf('aria-') == 0) { break; }
+                        if (attrs[x].name.indexOf('aria-') == 0 && attrs[x].name != 'aria-label') { break; }
                         if (attrs[x].name.indexOf('xmlns') == 0) { break; }
                         if (attrs[x].value.indexOf('data:image') >= 0) {
                             //embedded images (base64) should be ignored

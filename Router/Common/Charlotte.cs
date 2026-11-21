@@ -98,5 +98,70 @@ namespace Router.Common
             }
         }
 
+        /// <summary>
+        /// Forward a search-probe request to an idle Charlotte instance's
+        /// /Browser/ProbeSearch endpoint — the instance drives the page's JS
+        /// search with the probe term and reports the request it observed.
+        /// </summary>
+        public static string ProbeSearch(string url, string probe)
+        {
+            var requestId = 1 + new Random().Next(99999);
+            var logPrefix = requestId + ": ";
+            try
+            {
+                Log.WriteLine(logPrefix + "New search-probe request (" + url + ")");
+                ConfigCharlotteInstance? instance = null;
+                var start = DateTime.Now;
+                while (instance == null)
+                {
+                    instance = App.Config.Charlotte.Instances.Where(a => a.UsesCookies == false)
+                        .OrderBy(a => a.Started).FirstOrDefault();
+                    if ((DateTime.Now - start).TotalSeconds > 10)
+                    {
+                        var err = "Timeout when waiting for available Charlotte instance";
+                        Log.WriteLine(logPrefix + err);
+                        return "Error: " + err;
+                    }
+                    Thread.Sleep(500);
+                }
+
+                instance.InUse = true;
+                instance.Started = DateTime.Now;
+                try
+                {
+                    var endpoint = instance.Url.TrimEnd('/') + "/ProbeSearch";
+                    var postData = new StringBuilder();
+                    postData.Append(string.Format("{0}={1}&", WebUtility.HtmlEncode("url"), WebUtility.HtmlEncode(url)));
+                    postData.Append(string.Format("{0}={1}", WebUtility.HtmlEncode("probe"), WebUtility.HtmlEncode(probe)));
+                    StringContent postContent = new StringContent(postData.ToString(), Encoding.UTF8, "application/x-www-form-urlencoded");
+
+                    // The probe can take ~35s: page load + input drive + waits.
+                    using (HttpClient client = new HttpClient() { Timeout = TimeSpan.FromSeconds(60) })
+                    {
+                        HttpResponseMessage message = client.PostAsync(endpoint, postContent).GetAwaiter().GetResult();
+                        if (!message.IsSuccessStatusCode)
+                            return "Error: Charlotte ProbeSearch returned status code " + message.StatusCode;
+                        return message.Content.ReadAsStringAsync().GetAwaiter().GetResult();
+                    }
+                }
+                catch (Exception ex)
+                {
+                    var msg = ex.Message + "\n" + ex.StackTrace;
+                    Log.WriteLine(logPrefix + "ProbeSearch failed: " + msg);
+                    return "Error: " + ex.Message;
+                }
+                finally
+                {
+                    instance.InUse = false;
+                }
+            }
+            catch (Exception ex)
+            {
+                var msg = ex.Message + "\n" + ex.StackTrace;
+                Log.WriteLine(logPrefix + msg);
+                return "Error: " + msg;
+            }
+        }
+
     }
 }

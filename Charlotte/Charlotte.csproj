@@ -48,6 +48,7 @@
 		<PackageReference Include="CefSharp.OffScreen.NETCore" Version="139.0.280" />
 		<PackageReference Include="Crayon" Version="2.0.69" />
 		<PackageReference Include="Microsoft.Extensions.Hosting.WindowsServices" Version="7.0.0" />
+		<PackageReference Include="Microsoft.Playwright" Version="1.64.1" />
 		<PackageReference Include="Microsoft.VisualStudio.Azure.Containers.Tools.Targets" Version="1.17.0" />
 		<PackageReference Include="System.ServiceModel.Primitives" Version="4.10.0" />
 	</ItemGroup>
