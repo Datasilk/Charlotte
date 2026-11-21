@@ -6,11 +6,11 @@
   "Charlotte": {
     "Instances": [
       {
-        "Id": "Charlotte-001",
-        "Url": "http://host.docker.internal:7077/Browser",
-        "ServerName": "Bahamut",
+        "Id": "Charlotte-Local",
+        "Url": "http://localhost:7077/Browser",
+        "ServerName": "Local",
         "UsesCookies": false,
-        "Note": "First instance ever."
+        "Note": "Local development instance"
       }
     ]
   }
